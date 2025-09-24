@@ -1,0 +1,25 @@
+# build output
+dist/
+
+# deps & IDE
+node_modules/
+.vscode/
+.idea/
+
+# logs
+npm-debug.log*
+yarn-*.log
+pnpm-debug.log*
+
+# env
+.env
+.env.production
+
+# macOS
+.DS_Store
+
+# media – ignore velká videa
+public/**/*.mp4
+public/**/*.mov
+public/**/*.avi
+public/**/*.mkv

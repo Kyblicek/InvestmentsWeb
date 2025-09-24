@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const heroImage = '/img_vid/CopyofÉmergeResidencesBuildingandView.jpg';
+---
+<Layout
+  title="René Rypar | Edukační materiály"
+  description="Edukativní články, investiční komentáře a tržní novinky od Reného Rypara pro klienty i investory."
+  metaImage={heroImage}
+>
+  <PageHero title="Edukační materiály" image={heroImage} anchorId="#obsah" />
+
+  <section
+    id="obsah"
+    class="relative py-20"
+    data-async-section
+    aria-busy="true"
+  >
+    <div class="absolute inset-0 bg-white/85"></div>
+    <div class="relative mx-auto w-full max-w-4xl px-6">
+      <article class="rounded-3xl bg-white p-10 shadow-xl backdrop-blur-sm">
+        <header class="space-y-2">
+          <p class="text-sm text-neutral-500">15. září 2025 · Tržní update: aktuální rizika a příležitosti</p>
+          <h2 class="font-serif text-3xl">Investiční a ekonomické novinky z trhu 📈</h2>
+        </header>
+        <div class="mt-6 space-y-6 text-left">
+          <p>
+            Vážený investore, zasílám souhrn veškerých aktuálních informací z trhu, díky kterým porozumíte
+            volatilitě Vašich investic.
+          </p>
+          <p>
+            <strong>Fed a úrokové sazby</strong><br />
+            Americká centrální banka Fed pravděpodobně přistoupí v září ke snížení úrokových sazeb. Pro ekonomiku je to
+            pozitivní signál, protože levnější peníze podporují investice a spotřebu. Problém je, že trhy tuto událost
+            již započítaly do cen s předstihem. Jakmile přijde reálné rozhodnutí, efekt může být slabší nebo dokonce
+            vyvolat korekci, protože očekávání jsou nastavena vysoko.
+          </p>
+          <p>
+            <strong>Výsledky Nvidia</strong><br />
+            Nvidia znovu překonala očekávání trhu. EPS dosáhl 1,05 USD (vs. oček. 1 USD) a tržby činily 46,7 mld. USD
+            (vs. oček. 46,1 mld. USD). Firma potvrzuje svou roli lídra v segmentu AI čipů a její výsledky patří mezi
+            klíčové tahouny indexu S&amp;P 500.
+          </p>
+          <p>
+            <strong>Ekonomika USA</strong><br />
+            HDP v USA za první pololetí vzrostlo o 3,3 %, zatímco očekávání byla na 3 %. Americká ekonomika tak nadále
+            ukazuje odolnost, podporovanou silnou spotřebou a investicemi.
+          </p>
+          <p>
+            <strong>Google a antimonopolní spor</strong><br />
+            Google u soudu obhájil, že prohlížeč Chrome může zůstat součástí společnosti. Riziko povinného oddělení se
+            tímto krokem vytratilo, což bylo trhem přijato pozitivně.
+          </p>
+          <p>
+            <strong>Donald Trump a cla</strong><br />
+            Naopak negativní zprávy dorazily pro prezidenta Trumpa. Jeho cla byla soudem označena za nesouladná se
+            zákonem. Nejistota ohledně obchodní politiky vyvolala negativní reakci na trzích a začátek září tak
+            odstartoval mírným propadem indexů o zhruba 1 %.
+          </p>
+          <p>
+            Věřím, že Vám tyto informace pomohou jak s pochopením pohybů na trhu, tak s rozšířením znalostí ve
+            finančním, ekonomickém či politickém sektoru.
+          </p>
+          <p class="font-serif text-lg">
+            S přáním mnoha úspěchů,<br />
+            René Rypar
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Layout>

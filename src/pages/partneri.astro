@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const heroImage = '/assets/Copy of 1-d2fdd4e7.jpg';
+const partners = [
+  {
+    name: 'RE/MAX',
+    description:
+      'Jako součást sítě RE/MAX nabízím klientům profesionální realitní servis s globálním zázemím. Od developerských projektů přes lukrativní investiční příležitosti až po vaše vysněné bydlení. Díky silnému brandu a propracovanému know-how dokážeme doručit špičkový servis v každé transakci.',
+    link: 'https://www.remax-prestige.cz/rene-rypar/',
+    logo: '/assets/500000205_12029_RM_EP_SOCIAL_ICON_KAN.png',
+  },
+  {
+    name: 'XTB',
+    description:
+      'Spolupracuji s XTB, jedním z největších evropských brokerů, který nabízí stabilní platformu, nízké poplatky a široký výběr investičních nástrojů. Díky jejich podpoře mohu klientům přinášet efektivní a transparentní řešení v oblasti kapitálových trhů.',
+    link: 'https://link-pso.xtb.com/pso/JpI0i',
+    logo: '/assets/xtb-logo-download.png',
+  },
+  {
+    name: 'dont care create.',
+    description:
+      'Ve spolupráci s profesionálním marketingovým partnerem zajišťuji, aby každá nemovitost i investiční projekt dostal maximální viditelnost. Díky moderním strategiím, precizní vizuální prezentaci a cíleným kampaním oslovujeme správné publikum a zvyšujeme rychlost i úspěšnost prodeje.',
+    link: 'https://wedontcarewecreate.com/',
+    logo: '/assets/DCC B.png',
+  },
+];
+---
+<Layout
+  title="René Rypar | Partneři"
+  description="Prověření partneři a specialisté, se kterými René Rypar zajišťuje komplexní realitní a investiční služby na nejvyšší úrovni."
+  metaImage={heroImage}
+>
+  <PageHero title="Partneři" image={heroImage} anchorId="#partneri" />
+
+  <section id="partneri" class="bg-white py-20">
+    <div class="mx-auto w-full max-w-5xl space-y-12 px-6">
+      {partners.map((partner) => (
+        <div class="flex flex-col gap-6 rounded-3xl bg-muted p-8 shadow-md md:flex-row md:items-center">
+          <div class="flex w-40 items-center justify-center rounded-2xl bg-white p-4 shadow">
+            <img src={partner.logo} alt={`Logo ${partner.name}`} class="max-h-20 object-contain" loading="lazy" />
+          </div>
+          <div class="space-y-4 text-sm md:text-base">
+            <h3 class="font-serif text-2xl">{partner.name}</h3>
+            <p>{partner.description}</p>
+            <a class="text-accent underline underline-offset-4" href={partner.link}>
+              {partner.link}
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <SiteFooter />
+</Layout>

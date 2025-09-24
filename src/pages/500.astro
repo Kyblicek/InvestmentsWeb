@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Layout
+  title="Dočasný problém | René Rypar"
+  description="Omlouváme se, při zpracování požadavku došlo k chybě. Zkuste to prosím znovu nebo nás kontaktujte."
+>
+  <section class="flex min-h-[70vh] items-center justify-center bg-white px-6 py-20">
+    <div class="max-w-2xl space-y-6 text-center">
+      <p class="text-sm uppercase tracking-[0.4em] text-neutral-500">Chyba 500</p>
+      <h1 class="font-serif text-4xl">Došlo k technickému problému</h1>
+      <p class="text-base text-neutral-600">
+        Na naší straně se něco pokazilo. Obnovte stránku, vraťte se později nebo nás kontaktujte, a společně situaci vyřešíme.
+      </p>
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
+        <button class="btn btn-neutral rounded-full px-10 uppercase tracking-[0.3em]" type="button" onclick="location.reload()">
+          Zkusit znovu načíst
+        </button>
+        <a class="btn btn-outline rounded-full px-10 uppercase tracking-[0.3em]" href="mailto:rene.rypar@re-max.cz">
+          Kontaktovat podporu
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Layout>

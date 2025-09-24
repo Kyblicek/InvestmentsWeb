@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const backgroundImage = '/assets/Copy of 3-23f88748.jpg';
+---
+<Layout
+  title="René Rypar | Přihlášení"
+  description="Vstupte do klientského portálu Reného Rypara a mějte přehled o svých realitních a investičních projektech na jednom místě."
+  metaImage={backgroundImage}
+>
+  <section class="bg-white">
+    <div class="mx-auto grid min-h-[80vh] w-full max-w-6xl gap-0 overflow-hidden rounded-3xl px-6 py-20 lg:grid-cols-[1fr_1fr]">
+      <div class="relative hidden h-full overflow-hidden rounded-3xl lg:block">
+        <img
+          src={backgroundImage}
+          alt="Designový interiér"
+          class="h-full w-full object-cover"
+          loading="lazy"
+        />
+      </div>
+      <div class="flex flex-col justify-center gap-8 bg-white px-6 py-10 lg:px-12">
+        <h1 class="font-serif text-3xl">Přihlášení</h1>
+        <form class="space-y-5">
+          <label class="form-control">
+            <span class="label-text uppercase tracking-[0.3em] text-xs">Email</span>
+            <input type="email" placeholder="email@vasefirma.cz" class="input input-bordered rounded-full bg-muted" />
+          </label>
+          <label class="form-control">
+            <span class="label-text uppercase tracking-[0.3em] text-xs">Heslo</span>
+            <input type="password" placeholder="••••••••" class="input input-bordered rounded-full bg-muted" />
+          </label>
+          <button type="button" class="btn btn-neutral w-full rounded-full uppercase tracking-[0.3em]">
+            Přihlásit se
+          </button>
+        </form>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <button type="button" class="btn btn-outline rounded-full bg-white">
+            <span class="mr-2 text-lg">🟢</span>
+            Google
+          </button>
+          <button type="button" class="btn btn-outline rounded-full bg-white">
+            <span class="mr-2 text-lg"></span>
+            Apple
+          </button>
+        </div>
+        <p class="text-sm">
+          Nemáte účet? <a class="font-semibold text-accent" href="/registrace">Zaregistrujte se</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Layout>

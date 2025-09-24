@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  image: string;
+  anchorId?: string;
+}
+
+const { title, subtitle, image, anchorId = '#obsah' } = Astro.props as Props;
+---
+<section class="relative flex h-[60vh] min-h-[420px] items-center justify-center overflow-hidden bg-neutral-900">
+  <img
+    src={image}
+    alt={`Pozadí sekce ${title}`}
+    class="absolute inset-0 h-full w-full object-cover"
+    loading="lazy"
+    onerror="this.style.display='none'"
+  />
+  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-white/10 via-black/40 to-black/60"></div>
+  <div class="relative z-10 mx-auto max-w-3xl px-6 text-center text-white">
+    <h1 class="font-serif text-4xl uppercase tracking-[0.3em] sm:text-5xl">{title}</h1>
+    {subtitle && <p class="mt-4 text-base sm:text-lg">{subtitle}</p>}
+  </div>
+  <a
+    href={anchorId}
+    class="absolute bottom-10 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/60 text-xl"
+    aria-label="Pokračovat na obsah"
+  >
+    ↓
+  </a>
+</section>

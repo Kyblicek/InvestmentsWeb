@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+export const prerender = true;
+---
+<Layout
+  title="Stránka nenalezena | René Rypar"
+  description="Omlouváme se, požadovaná stránka neexistuje nebo byla přesunuta. Vraťte se na úvod nebo pokračujte na další sekce."
+>
+  <section class="flex min-h-[70vh] items-center justify-center bg-white px-6 py-20">
+    <div class="max-w-2xl text-center space-y-6">
+      <p class="text-sm uppercase tracking-[0.4em] text-neutral-500">Chyba 404</p>
+      <h1 class="font-serif text-4xl">Tahle stránka už tady není</h1>
+      <p class="text-base text-neutral-600">
+        Je možné, že adresa byla přepsána nebo přesunuta. Vyberte si některou z dostupných sekcí nebo se vraťte na hlavní stránku.
+      </p>
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center">
+        <a class="btn btn-neutral rounded-full px-10 uppercase tracking-[0.3em]" href="/">
+          Zpět na domovskou stránku
+        </a>
+        <a class="btn btn-outline rounded-full px-10 uppercase tracking-[0.3em]" href="/newsletter">
+          Edukační materiály
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <SiteFooter />
+</Layout>

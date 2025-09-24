@@ -1,0 +1,185 @@
+---
+import '../styles/global.css';
+
+const NAV_LINKS = [
+  { href: '/', label: 'Domů' },
+  { href: '/newsletter', label: 'Edukační materiály' },
+  { href: '/portal', label: 'Portál' },
+  { href: '/partneri', label: 'Partneři' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href) => href === currentPath;
+
+const {
+  title: pageTitle = 'René Rypar',
+  description: pageDescription =
+    'Strategický realitní specialista a investor, který propojuje data, marketing a osobní přístup pro maximální výsledek.',
+  metaImage = '/assets/IMG_6170.jpg',
+} = Astro.props ?? {};
+
+const canonicalURL = Astro.url?.href ?? '';
+const openGraphImage = Astro.url ? new URL(metaImage, Astro.url).href : metaImage;
+---
+<!doctype html>
+<html lang="cs" class="bg-white text-primary">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={openGraphImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={openGraphImage} />
+    <meta name="theme-color" content="#111111" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-white text-primary">
+    <div
+      id="pageLoader"
+      data-loader
+      aria-hidden="true"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-white text-sm uppercase tracking-[0.4em] transition-opacity duration-500"
+    >
+      <div class="flex items-center gap-3 text-primary">
+        <span class="h-3 w-3 animate-ping rounded-full bg-primary"></span>
+        <span>Načítání</span>
+      </div>
+    </div>
+    <noscript>
+      <style>
+        #pageLoader {
+          display: none !important;
+        }
+      </style>
+    </noscript>
+    <header class="fixed inset-x-0 top-0 z-30 flex items-center justify-between bg-white/70 px-6 py-4 backdrop-blur">
+      <a href="/" class="font-serif text-lg tracking-[0.3em] uppercase text-primary">
+        René Rypar
+      </a>
+      <button
+        type="button"
+        class="flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 bg-white/90 transition hover:border-primary"
+        aria-label="Otevřít menu"
+        aria-expanded="false"
+        data-menu-button
+      >
+        <span class="sr-only">Menu</span>
+        <div class="flex flex-col space-y-1.5">
+          <span class="block h-[2px] w-6 bg-primary"></span>
+          <span class="block h-[2px] w-6 bg-primary"></span>
+          <span class="block h-[2px] w-6 bg-primary"></span>
+        </div>
+      </button>
+    </header>
+
+    <div
+      id="menuOverlay"
+      class="fixed inset-0 z-40 hidden flex items-center justify-center bg-black/60 text-white backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/70"></div>
+      <button
+        type="button"
+        class="absolute right-8 top-8 text-4xl text-white transition hover:text-accent"
+        aria-label="Zavřít menu"
+        data-menu-close
+      >
+        ×
+      </button>
+      <div class="relative z-10 flex w-full max-w-5xl flex-col gap-12 px-8 text-center md:flex-row md:items-center md:justify-between md:text-left">
+        <div class="space-y-3">
+          <p class="font-serif text-4xl uppercase tracking-[0.4em] md:text-5xl">René Rypar</p>
+          <p class="text-sm uppercase tracking-[0.6em]">Realitní specialista &amp; investor</p>
+        </div>
+        <nav class="mx-auto md:mx-0">
+          <ul class="space-y-4 text-xl">
+            {NAV_LINKS.map(({ href, label }) => (
+              <li>
+                <a
+                  href={href}
+                  class={`transition hover:text-accent ${isActive(href) ? 'text-accent' : 'text-white'}`}
+                  data-menu-link
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <main class="pt-24">
+      <slot />
+    </main>
+
+    <script is:inline>
+      const loader = document.querySelector('[data-loader]');
+      const asyncSections = document.querySelectorAll('[data-async-section]');
+
+      asyncSections.forEach((section) => section.setAttribute('aria-busy', 'true'));
+
+      const hideLoader = () => {
+        if (!loader) return;
+        loader.classList.add('opacity-0', 'pointer-events-none');
+        loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+        asyncSections.forEach((section) => section.setAttribute('aria-busy', 'false'));
+      };
+
+      const attachLoaderListeners = () => {
+        if (document.readyState === 'complete') {
+          hideLoader();
+        } else {
+          window.addEventListener('load', hideLoader, { once: true });
+        }
+
+        document.addEventListener('astro:after-swap', hideLoader);
+        document.addEventListener('astro:page-load', hideLoader);
+      };
+
+      attachLoaderListeners();
+
+      const button = document.querySelector('[data-menu-button]');
+      const overlay = document.getElementById('menuOverlay');
+      const closeButton = overlay?.querySelector('[data-menu-close]');
+      const links = overlay?.querySelectorAll('[data-menu-link]');
+
+      const toggleMenu = (open) => {
+        if (!overlay || !button) return;
+        overlay.classList.toggle('hidden', !open);
+        document.body.classList.toggle('overflow-hidden', open);
+        button.setAttribute('aria-expanded', String(open));
+      };
+
+      button?.addEventListener('click', () => {
+        const shouldOpen = overlay?.classList.contains('hidden');
+        toggleMenu(Boolean(shouldOpen));
+      });
+
+      closeButton?.addEventListener('click', () => toggleMenu(false));
+      overlay?.addEventListener('click', (event) => {
+        if (event.target === overlay) toggleMenu(false);
+      });
+      links?.forEach((link) => link.addEventListener('click', () => toggleMenu(false)));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') toggleMenu(false);
+      });
+    </script>
+  </body>
+</html>
