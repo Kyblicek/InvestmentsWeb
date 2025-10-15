@@ -9,13 +9,27 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^8.2.5",
     "@astrojs/sitemap": "^3.6.0",
+    "@prisma/client": "^5.19.0",
     "astro": "^5.13.9",
-    "daisyui": "^5.1.13"
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "daisyui": "^5.1.13",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie": "^0.6.0",
+    "@types/node": "^20.12.7",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17"
+    "prisma": "^5.19.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.10.2",
+    "typescript": "^5.4.5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { db } from '../../server/db';
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect('/prihlaseni');
+}
+
+const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
+  db.post.count(),
+  db.post.count({ where: { status: 'PUBLISHED' } }),
+  db.post.count({ where: { status: 'DRAFT' } }),
+]);
+---
+<Layout title="René Rypar | Admin" description="Administrace obsahu webu." metaImage="/assets/IMG_6170.jpg">
+  <section class="bg-[#f5f5f5] py-24">
+    <div class="mx-auto flex w-full max-w-5xl flex-col gap-12 rounded-3xl bg-white p-12 shadow-lg">
+      <header class="flex flex-col gap-2 text-left">
+        <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Vítejte zpět</p>
+        <h1 class="font-serif text-4xl">Administrace</h1>
+        <p class="text-neutral-600">Spravujte obsah webu a publikujte nové příspěvky.</p>
+      </header>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Celkem postů</p>
+          <p class="mt-4 text-3xl font-semibold">{totalPosts}</p>
+        </div>
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Publikované</p>
+          <p class="mt-4 text-3xl font-semibold text-emerald-600">{publishedPosts}</p>
+        </div>
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Drafty</p>
+          <p class="mt-4 text-3xl font-semibold text-amber-500">{draftPosts}</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-4">
+        <a
+          class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+          href="/admin/posts/new"
+        >
+          Nový post
+        </a>
+        <a
+          class="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+          href="/admin/posts"
+        >
+          Správa postů
+        </a>
+        <form method="post" action="/api/auth/logout">
+          <button
+            type="submit"
+            class="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+          >
+            Odhlásit se
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>

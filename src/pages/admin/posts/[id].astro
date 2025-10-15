@@ -1,0 +1,121 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { db } from '../../../server/db';
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect('/prihlaseni');
+}
+
+const csrfToken = Astro.locals.csrfToken;
+if (!csrfToken) {
+  throw new Error('Missing CSRF token');
+}
+const id = Astro.params.id;
+
+if (!id) {
+  throw new Error('Missing post ID');
+}
+
+const post = await db.post.findUnique({
+  where: { id },
+});
+
+if (!post) {
+  return Astro.redirect('/admin/posts?error=not-found');
+}
+
+const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') : '—');
+---
+<Layout title={`Upravit: ${post.title}`} description="Editace příspěvku." metaImage="/assets/IMG_6170.jpg">
+  <section class="bg-[#f5f5f5] py-24">
+    <div class="mx-auto flex w-full max-w-5xl flex-col gap-10 rounded-3xl bg-white p-10 shadow-lg">
+      <header class="space-y-2">
+        <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Úprava</p>
+        <h1 class="font-serif text-3xl">{post.title}</h1>
+      </header>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Status</p>
+          <p class="mt-4 text-sm font-semibold">
+            {post.status === 'PUBLISHED' ? 'Publikováno' : 'Draft'}
+          </p>
+        </div>
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Publikováno</p>
+          <p class="mt-4 text-sm font-semibold">{formatDate(post.publishedAt)}</p>
+        </div>
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">LinkedIn</p>
+          <p class="mt-4 text-sm font-semibold">
+            {post.linkedinUrl ? <a class="underline" href={post.linkedinUrl} target="_blank" rel="noopener">Otevřít</a> : '—'}
+          </p>
+        </div>
+      </div>
+
+      <form method="post" action={`/api/posts/${post.id}`} class="space-y-6">
+        <input type="hidden" name="_method" value="PATCH" />
+        <input type="hidden" name="csrfToken" value={csrfToken} />
+
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Název *</span>
+          <input
+            type="text"
+            name="title"
+            value={post.title}
+            required
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+          />
+        </label>
+
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obsah *</span>
+          <textarea
+            name="content"
+            rows="10"
+            required
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+            set:textContent={post.content}
+          ></textarea>
+        </label>
+
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obrázek (URL)</span>
+          <input
+            type="url"
+            name="imageUrl"
+            value={post.imageUrl ?? ''}
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+          />
+        </label>
+
+        <div class="flex items-center gap-4">
+          <button
+            type="submit"
+            class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+          >
+            Uložit změny
+          </button>
+          <a
+            href="/admin/posts"
+            class="rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+          >
+            Zpět
+          </a>
+        </div>
+      </form>
+      {post.status === 'DRAFT' && (
+        <form method="post" action={`/api/posts/${post.id}/publish`}>
+          <input type="hidden" name="csrfToken" value={csrfToken} />
+          <button
+            type="submit"
+            class="rounded-full bg-emerald-600 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-emerald-500"
+          >
+            Publikovat
+          </button>
+        </form>
+      )}
+    </div>
+  </section>
+</Layout>

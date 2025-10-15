@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { db } from '../../server/db';
+
+const id = Astro.params.id;
+
+if (!id) {
+  throw new Error('Missing post ID');
+}
+
+const post = await db.post.findFirst({
+  where: {
+    id,
+    status: 'PUBLISHED',
+  },
+});
+
+if (!post) {
+  return Astro.redirect('/posts');
+}
+
+const formatDate = (date?: Date | null) =>
+  date ? new Intl.DateTimeFormat('cs-CZ', { dateStyle: 'long' }).format(date) : 'Neznámé datum';
+
+const paragraphs = post.content.split(/\n\s*\n/).map((para) => para.trim()).filter(Boolean);
+---
+<Layout
+  title={`${post.title} | René Rypar`}
+  description={post.content.slice(0, 160)}
+  metaImage={post.imageUrl ?? '/assets/IMG_6170.jpg'}
+>
+  <section class="bg-[#f5f5f5] py-24">
+    <div class="mx-auto flex w-full max-w-4xl flex-col gap-10 rounded-3xl bg-white p-10 shadow-lg">
+      <header class="space-y-3 text-center">
+        <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">{formatDate(post.publishedAt)}</p>
+        <h1 class="font-serif text-4xl">{post.title}</h1>
+        {post.linkedinUrl && (
+          <a
+            href={post.linkedinUrl}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center justify-center rounded-full border border-neutral-300 px-6 py-2 text-xs uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+          >
+            Zobrazit na LinkedIn
+          </a>
+        )}
+      </header>
+
+      {post.imageUrl && (
+        <div class="overflow-hidden rounded-3xl">
+          <img src={post.imageUrl} alt={post.title} class="w-full object-cover" loading="lazy" />
+        </div>
+      )}
+
+      <article class="space-y-5 text-base leading-7 text-neutral-700">
+        {paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </article>
+
+      <div class="flex justify-center">
+        <a
+          href="/posts"
+          class="rounded-full border border-neutral-300 px-6 py-2 text-xs uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+        >
+          Zpět na přehled
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

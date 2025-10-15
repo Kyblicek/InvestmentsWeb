@@ -2,10 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
-const heroVideo = '/assets/DUBAI_PROMO.mp4';
+const heroVideo = '/assets/DUBAI_PROMO_dist.mp4';
 const heroPoster = '/assets/IMG_6170.jpg';
 const aboutImage = '/assets/IMG_6170.jpg';
 const livingImage = '/assets/IMG_6380.JPG';
+const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
 ---
 <Layout
   title="René Rypar | Realitní specialista & investor"
@@ -127,12 +128,14 @@ const livingImage = '/assets/IMG_6380.JPG';
       <div class="mb-10">
         <h3 class="font-serif text-3xl uppercase tracking-[0.3em]">Kontaktujte mě</h3>
       </div>
-      <form class="grid gap-10 text-sm tracking-[0.25em] md:grid-cols-2">
+      <form action={formspreeEndpoint ?? '#'} method="POST" class="grid gap-10 text-sm tracking-[0.25em] md:grid-cols-2">
         <label class="flex flex-col gap-3 uppercase">
           <span>Křestní jméno *</span>
           <input
             type="text"
             placeholder="Jméno"
+            name="firstName"
+            required
             class="border-b border-primary bg-transparent pb-3 text-base font-normal tracking-[0.05em] outline-none"
           />
         </label>
@@ -141,6 +144,8 @@ const livingImage = '/assets/IMG_6380.JPG';
           <input
             type="text"
             placeholder="Příjmení"
+            name="lastName"
+            required
             class="border-b border-primary bg-transparent pb-3 text-base font-normal tracking-[0.05em] outline-none"
           />
         </label>
@@ -149,6 +154,8 @@ const livingImage = '/assets/IMG_6380.JPG';
           <input
             type="email"
             placeholder="email@vasefirma.cz"
+            name="email"
+            required
             class="border-b border-primary bg-transparent pb-3 text-base font-normal tracking-[0.05em] outline-none"
           />
         </label>
@@ -157,12 +164,14 @@ const livingImage = '/assets/IMG_6380.JPG';
           <textarea
             rows="4"
             placeholder="Jak vám mohu pomoci?"
+            name="message"
             class="border-b border-primary bg-transparent pb-3 text-base font-normal tracking-[0.05em] outline-none"
           ></textarea>
         </label>
+        <input type="hidden" name="subject" value="Kontakt z webu René Rypar" />
         <div class="md:col-span-2">
           <button
-            type="button"
+            type="submit"
             class="btn btn-neutral rounded-full px-12 py-3 uppercase tracking-[0.3em] shadow-md"
           >
             Odeslat

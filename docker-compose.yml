@@ -1,0 +1,14 @@
+services:
+  db:
+    container_name: rrinvest-db
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rrinvest
+      POSTGRES_PASSWORD: rrinvest
+      POSTGRES_DB: rrinvest
+    ports:
+      - "5433:5432"   # host:container
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
