@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { handleApi, json } from '../../../../../server/api';
-import { db } from '../../../../../server/db';
-import { env } from '../../../../../server/env';
-import { logger } from '../../../../../server/logger';
+import { handleApi, json } from '../../../../server/api';
+import { db } from '../../../../server/db';
+import { env } from '../../../../server/env';
+import { logger } from '../../../../server/logger';
 
 const payloadSchema = z.object({
   linkedinUrl: z.string().url(),

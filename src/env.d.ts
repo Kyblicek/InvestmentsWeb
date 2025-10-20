@@ -3,9 +3,13 @@
 
 import type { User } from '@prisma/client';
 
-declare namespace App {
-  interface Locals {
-    user: User | null;
-    csrfToken?: string;
+declare global {
+  namespace App {
+    interface Locals {
+      user: User | null;
+      csrfToken?: string;
+    }
   }
 }
+
+export {};

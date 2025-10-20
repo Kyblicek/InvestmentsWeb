@@ -1,28 +1,13 @@
 import type { APIRoute } from 'astro';
-import { PostStatus } from '@prisma/client';
 import { z } from 'zod';
-import { handleApi, json } from '../../../../server/api';
-import { getSessionTokenForCsrf, requireAdmin } from '../../../../server/auth';
-import { verifyCsrfToken } from '../../../../server/csrf';
-import { db } from '../../../../server/db';
-import { publishPost } from '../../../../server/posts';
+import { handleApi, json } from '../../../server/api';
+import { getSessionTokenForCsrf, requireAdmin } from '../../../server/auth';
+import { verifyCsrfToken } from '../../../server/csrf';
+import { db } from '../../../server/db';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   content: z.string().min(1, 'Content is required'),
-  imageUrl: z
-    .union([z.string(), z.null(), z.undefined()])
-    .transform((value) => {
-      if (!value) return undefined;
-      const trimmed = value.trim();
-      return trimmed === '' ? undefined : trimmed;
-    })
-    .refine((value) => !value || /^https?:\/\//i.test(value), {
-      message: 'Image URL must be absolute',
-    }),
-  publish: z
-    .union([z.string(), z.boolean(), z.undefined()])
-    .transform((value) => value === 'on' || value === 'true' || value === true),
   csrfToken: z.string().min(1, 'Missing CSRF token'),
 });
 
@@ -43,6 +28,7 @@ export const POST: APIRoute = handleApi(async (context) => {
 
   const sessionToken = getSessionTokenForCsrf(context.cookies);
   const contentType = context.request.headers.get('content-type') ?? '';
+  const wantsJson = context.request.headers.get('accept')?.includes('application/json') ?? false;
 
   let parsed: z.infer<typeof formSchema>;
   if (contentType.includes('application/json')) {
@@ -53,8 +39,6 @@ export const POST: APIRoute = handleApi(async (context) => {
     parsed = formSchema.parse({
       title: formData.get('title'),
       content: formData.get('content'),
-      imageUrl: formData.get('imageUrl'),
-      publish: formData.get('publish')?.toString(),
       csrfToken: formData.get('csrfToken'),
     });
   }
@@ -67,17 +51,10 @@ export const POST: APIRoute = handleApi(async (context) => {
     data: {
       title: parsed.title,
       content: parsed.content,
-      imageUrl: parsed.imageUrl,
-      status: PostStatus.DRAFT,
-      publishedAt: null,
     },
   });
 
-  if (parsed.publish) {
-    await publishPost(post.id);
-  }
-
-  if (contentType.includes('application/json')) {
+  if (contentType.includes('application/json') || wantsJson) {
     return json({ postId: post.id }, { status: 201 });
   }
 

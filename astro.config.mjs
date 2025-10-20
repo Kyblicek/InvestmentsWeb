@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-ignore -- Astro provides ESM types via package exports
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import sitemap from '@astrojs/sitemap';

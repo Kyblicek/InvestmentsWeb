@@ -6,7 +6,15 @@ if (user?.role === 'ADMIN') {
   return Astro.redirect('/admin');
 }
 
-const errorMessage = Astro.url.searchParams.get('error');
+const errorParam = Astro.url.searchParams.get('error');
+const resetOk = Astro.url.searchParams.get('reset') === 'ok';
+
+const errorMessage =
+  errorParam === 'wrong'
+    ? 'Špatné heslo, zkuste to znovu.'
+    : errorParam === 'rate-limit'
+      ? 'Příliš mnoho pokusů. Zkuste to později.'
+      : null;
 ---
 <Layout title="René Rypar | Přihlášení" description="Přihlášení do administrace webu." metaImage="/assets/IMG_6170.jpg">
   <section class="bg-[#f5f5f5] py-24">
@@ -15,6 +23,12 @@ const errorMessage = Astro.url.searchParams.get('error');
         <h1 class="font-serif text-3xl">Přihlášení</h1>
         <p class="text-sm text-neutral-600">Použijte přístupové údaje správce.</p>
       </header>
+
+      {resetOk && (
+        <div class="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          Heslo bylo úspěšně změněno. Přihlaste se novými údaji.
+        </div>
+      )}
 
       {errorMessage && (
         <div class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -29,7 +43,7 @@ const errorMessage = Astro.url.searchParams.get('error');
             type="email"
             name="email"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-white outline-none focus:border-neutral-400"
             placeholder="admin@rrinvestments.eu"
           />
         </label>
@@ -40,20 +54,26 @@ const errorMessage = Astro.url.searchParams.get('error');
             type="password"
             name="password"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-white outline-none focus:border-neutral-400"
             placeholder="••••••••"
           />
         </label>
 
         <button
           type="submit"
-          class="w-full rounded-full bg-neutral-900 px-4 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+          class="w-full rounded-full bg-black px-4 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
         >
           Přihlásit se
         </button>
       </form>
       <p class="text-center text-xs text-neutral-500">
         Potřebujete účet? Kontaktujte správce systému.
+      </p>
+      <p class="text-center text-xs text-neutral-500">
+        Zapomněli jste heslo?{' '}
+        <a href="/prihlaseni/reset" class="underline">
+          Obnovit.
+        </a>
       </p>
     </div>
   </section>

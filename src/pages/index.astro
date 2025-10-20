@@ -13,7 +13,7 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   description="René Rypar propojuje realitní prodeje a investice do nemovitostí s datovou analýzou a osobním přístupem, aby klientům přinesl bezpečné a výnosné transakce."
   metaImage="/assets/IMG_6170.jpg"
 >
-  <section class="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
+  <section class="relative flex min-h-[90vh] flex-col justify-end overflow-hidden">
     <video
       class="absolute inset-0 h-full w-full object-cover"
       src={heroVideo}
@@ -27,13 +27,13 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
       Váš prohlížeč nepodporuje přehrávání videa. Můžete pokračovat v prohlížení stránky i bez něj.
     </video>
     <div class="absolute inset-0 bg-black/45"></div>
-    <div class="relative z-10 mx-auto max-w-3xl px-6 text-center text-white">
-      <p class="uppercase tracking-[0.8em] text-sm">René Rypar</p>
-      <h1 class="font-serif text-4xl sm:text-6xl">Realitní specialista &amp; investor</h1>
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-6 pb-32 text-left text-white">
+      <p class="text-sm uppercase tracking-[0.8em]">René Rypar</p>
+      <h1 class="mt-3 font-serif text-4xl sm:text-6xl">Realitní specialista &amp; investor</h1>
     </div>
     <a
       href="#o-mne"
-      class="absolute bottom-10 inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/60 text-2xl text-white transition hover:border-white"
+      class="absolute bottom-10 left-1/2 inline-flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border border-white/60 text-2xl text-white transition hover:border-white"
       aria-label="Srolovat na sekci O mně"
     >
       ↓
@@ -62,15 +62,17 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   </section>
 
   <section class="py-20">
-    <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 md:flex-row md:items-start text-center">
-      <div class="flex-1 space-y-6">
-        <h3 class="font-serif text-3xl">Proč spolupracovat?</h3>
-        <p>
-          Zajišťuji <strong>kompletní servis</strong> od nastavení cenové a marketingové strategie, přes právní
-          služby a financování, až po technickou inspekci a bezpečné uzavření obchodu. <strong>Spolupracuji výhradně s
-          prověřenými odborníky</strong>, což mi umožňuje garantovat vysoký standard a maximální výnos bez zbytečné
-          zátěže pro klienta.
-        </p>
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 md:flex-row md:items-start">
+      <div class="flex-1 space-y-6 text-center">
+        <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">PROČ SPOLUPRACOVAT?</h3>
+        <div class="space-y-5 text-lg leading-8 text-neutral-700">
+          <p>
+            Zajišťuji <strong>kompletní servis</strong> od nastavení cenové a marketingové strategie, přes právní
+            služby a financování, až po technickou inspekci a bezpečné uzavření obchodu. <strong>Spolupracuji výhradně s
+            prověřenými odborníky</strong>, což mi umožňuje garantovat vysoký standard a maximální výnos bez zbytečné
+            zátěže pro klienta.
+          </p>
+        </div>
       </div>
       <div class="flex flex-1 items-center justify-center overflow-hidden rounded-[32px] border border-[#d4d4d4] bg-white p-12 shadow-lg">
         <img
@@ -86,20 +88,22 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   <section class="bg-[#ededed] py-20">
     <div class="mx-auto w-full max-w-4xl px-6 text-center">
       <div class="space-y-6">
-        <h3 class="font-serif text-3xl">Můj přístup</h3>
-        <p class="text-lg leading-relaxed text-neutral-700">
-          Nemovitosti pro mě <strong>nejsou jen obchodem</strong>, ale také <strong>investicí</strong>. Skvěle totiž doplňují akcie při tvorbě
-          <strong>stabilního investičního portfolia</strong>. Akciím a investování celkově se věnuji už od svých patnácti let. Na
-          trzích jsem si osvojil systematický přístup <strong>založený na datech a analýze</strong>. Během studia ekonomiky jsem
-          zvítězil v Celopražské ekonomické soutěži, kde jsem prezentoval své myšlenky o investování před odborným
-          publikem. Tyto zkušenosti mi umožňují klientům nabídnout <strong>širší pohled</strong> nejen na realitní transakce, ale i na
-          jejich propojení s celkovým budováním majetku.
-        </p>
-        <p class="text-lg leading-relaxed text-neutral-700">
-          <strong>Nejsem finanční poradce.</strong> Jsem partner, který hledá řešení odpovídající konkrétní <strong>situaci klienta</strong>, jeho
-          cílům a časovému horizontu. Společně nastavíme dlouhodobý plán, který <strong>pracuje s rizikem</strong> a směřuje k růstu
-          hodnoty majetku, ať už prostřednictvím nemovitostí, akciových investic, nebo jejich kombinace.
-        </p>
+        <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">MŮJ PŘÍSTUP</h3>
+        <div class="space-y-5 text-lg leading-8 text-neutral-700">
+          <p>
+            Nemovitosti pro mě <strong>nejsou jen obchodem</strong>, ale také <strong>investicí</strong>. Skvěle totiž doplňují akcie při tvorbě
+            <strong>stabilního investičního portfolia</strong>. Akciím a investování celkově se věnuji už od svých patnácti let. Na
+            trzích jsem si osvojil systematický přístup <strong>založený na datech a analýze</strong>. Během studia ekonomiky jsem
+            zvítězil v Celopražské ekonomické soutěži, kde jsem prezentoval své myšlenky o investování před odborným
+            publikem. Tyto zkušenosti mi umožňují klientům nabídnout <strong>širší pohled</strong> nejen na realitní transakce, ale i na
+            jejich propojení s celkovým budováním majetku.
+          </p>
+          <p>
+            <strong>Nejsem finanční poradce.</strong> Jsem partner, který hledá řešení odpovídající konkrétní <strong>situaci klienta</strong>, jeho
+            cílům a časovému horizontu. Společně nastavíme dlouhodobý plán, který <strong>pracuje s rizikem</strong> a směřuje k růstu
+            hodnoty majetku, ať už prostřednictvím nemovitostí, akciových investic, nebo jejich kombinace.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -107,15 +111,17 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   <section class="py-20">
     <div class="mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-[1fr_1fr] md:items-center">
       <div class="space-y-6 text-center">
-        <h3 class="font-serif text-3xl">Máte zájem?</h3>
-        <p>
-          Znalosti sdílím nejen na osobních schůzkách, ale i prostřednictvím sociálních sítí a v sekci
-          <strong>Edukační materiály</strong> na mém webu.
-        </p>
-        <p>
-          Pokud hledáte <strong>profesionální a promyšlený přístup</strong> k investicím do nemovitostí, rád se s vámi setkám a
-          probereme, jak efektivně vést transakce a <strong>budovat váš majetek</strong>.
-        </p>
+        <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">MÁTE ZÁJEM?</h3>
+        <div class="space-y-5 text-lg leading-8 text-neutral-700">
+          <p>
+            Znalosti sdílím nejen na osobních schůzkách, ale i prostřednictvím sociálních sítí a v sekci
+            <a href="/posts" class="font-semibold underline underline-offset-4">Posty</a> na mém webu.
+          </p>
+          <p>
+            Pokud hledáte <strong>profesionální a promyšlený přístup</strong> k investicím do nemovitostí, rád se s vámi setkám a
+            probereme, jak efektivně vést transakce a <strong>budovat váš majetek</strong>.
+          </p>
+        </div>
       </div>
       <div class="overflow-hidden rounded-[32px] shadow-xl">
         <img src={livingImage} alt="Interiér bytu" class="h-full w-full object-cover" loading="lazy" />
@@ -125,8 +131,8 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
 
   <section class="bg-[#d9d9d9] py-20">
     <div class="mx-auto w-full max-w-6xl px-6">
-      <div class="mb-10">
-        <h3 class="font-serif text-3xl uppercase tracking-[0.3em]">Kontaktujte mě</h3>
+      <div class="mb-10 text-center">
+        <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">KONTAKTUJTE MĚ</h3>
       </div>
       <form action={formspreeEndpoint ?? '#'} method="POST" class="grid gap-10 text-sm tracking-[0.25em] md:grid-cols-2">
         <label class="flex flex-col gap-3 uppercase">
@@ -172,7 +178,7 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
         <div class="md:col-span-2">
           <button
             type="submit"
-            class="btn btn-neutral rounded-full px-12 py-3 uppercase tracking-[0.3em] shadow-md"
+            class="rounded-full bg-black px-12 py-3 text-sm uppercase tracking-[0.3em] text-white shadow-md transition hover:bg-black/80"
           >
             Odeslat
           </button>

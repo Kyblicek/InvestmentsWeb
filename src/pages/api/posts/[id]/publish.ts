@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { handleApi, json } from '../../../../../server/api';
-import { getSessionTokenForCsrf, requireAdmin } from '../../../../../server/auth';
-import { verifyCsrfToken } from '../../../../../server/csrf';
-import { publishPost } from '../../../../../server/posts';
+import { handleApi, json } from '../../../../server/api';
+import { getSessionTokenForCsrf, requireAdmin } from '../../../../server/auth';
+import { verifyCsrfToken } from '../../../../server/csrf';
+import { publishPost } from '../../../../server/posts';
 
 const publishSchema = z.object({
   csrfToken: z.string().min(1, 'Missing CSRF token'),
@@ -18,6 +18,7 @@ export const POST: APIRoute = handleApi(async (context) => {
   }
 
   const contentType = context.request.headers.get('content-type') ?? '';
+  const wantsJson = context.request.headers.get('accept')?.includes('application/json') ?? false;
   const sessionToken = getSessionTokenForCsrf(context.cookies);
 
   let parsed: z.infer<typeof publishSchema>;
@@ -37,7 +38,7 @@ export const POST: APIRoute = handleApi(async (context) => {
 
   const post = await publishPost(id);
 
-  if (contentType.includes('application/json')) {
+  if (contentType.includes('application/json') || wantsJson) {
     return json({ post });
   }
 

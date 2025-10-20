@@ -19,52 +19,48 @@ if (!csrfToken) {
         <h1 class="font-serif text-3xl">Nový příspěvek</h1>
       </header>
 
-      <form method="post" action="/api/posts" class="space-y-6">
+      <form id="create-post-form" method="post" action="/api/posts" class="space-y-6">
         <input type="hidden" name="csrfToken" value={csrfToken} />
 
         <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Název *</span>
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Nadpis *</span>
           <input
             type="text"
             name="title"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
-            placeholder="Titulek příspěvku"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+            style="background-color: #ffffff;"
+            placeholder="Krátký nadpis"
+            autocomplete="off"
+            autofocus
           />
         </label>
 
         <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obsah *</span>
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Text příspěvku *</span>
           <textarea
             name="content"
-            rows="8"
+            rows="10"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
-            placeholder="Obsah příspěvku (markdown nebo prostý text)"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+            style="background-color: #ffffff;"
+            placeholder="Hlavní text (150–250 slov)"
           ></textarea>
         </label>
 
-        <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obrázek (URL)</span>
-          <input
-            type="url"
-            name="imageUrl"
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
-            placeholder="https://example.com/image.jpg"
-          />
-        </label>
-
-        <label class="flex items-center gap-3">
-          <input type="checkbox" name="publish" class="h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900" />
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Publikovat ihned</span>
-        </label>
-
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
           <button
             type="submit"
             class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
           >
-            Uložit
+            Uložit jako draft
+          </button>
+          <button
+            type="button"
+            id="publish-post"
+            class="rounded-full bg-emerald-600 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-emerald-500"
+          >
+            Uložit &amp; publikovat
           </button>
           <a
             href="/admin/posts"
@@ -77,3 +73,61 @@ if (!csrfToken) {
     </div>
   </section>
 </Layout>
+
+<script>
+  const publishButtonEl = document.getElementById('publish-post');
+  const formEl = document.getElementById('create-post-form');
+
+  if (publishButtonEl instanceof HTMLButtonElement && formEl instanceof HTMLFormElement) {
+    const publishButton = publishButtonEl;
+    const form = formEl;
+
+    publishButton.addEventListener('click', async () => {
+      const formData = new FormData(form);
+
+      publishButton.disabled = true;
+      publishButton.textContent = 'Publikuji…';
+
+      try {
+        const createResponse = await fetch('/api/posts', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+          body: formData,
+        });
+
+        if (!createResponse.ok) {
+          throw new Error('Vytvoření příspěvku selhalo.');
+        }
+
+        const { postId } = await createResponse.json();
+        if (!postId) {
+          throw new Error('Chybí ID nového příspěvku.');
+        }
+
+        const publishFormData = new FormData();
+        publishFormData.set('csrfToken', String(formData.get('csrfToken') ?? ''));
+
+        const publishResponse = await fetch(`/api/posts/${postId}/publish`, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+          body: publishFormData,
+        });
+
+        if (!publishResponse.ok) {
+          throw new Error('Publikace příspěvku selhala.');
+        }
+
+        window.location.href = `/admin/posts/${postId}`;
+      } catch (error) {
+        publishButton.disabled = false;
+        publishButton.textContent = 'Uložit & publikovat';
+        // eslint-disable-next-line no-alert
+        alert(error instanceof Error ? error.message : 'Došlo k neočekávané chybě.');
+      }
+    });
+  }
+</script>

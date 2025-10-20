@@ -37,15 +37,15 @@ const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap justify-center gap-4">
         <a
-          class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+          class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-neutral-700"
           href="/admin/posts/new"
         >
           Nový post
         </a>
         <a
-          class="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+          class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-neutral-700"
           href="/admin/posts"
         >
           Správa postů
@@ -53,7 +53,7 @@ const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
         <form method="post" action="/api/auth/logout">
           <button
             type="submit"
-            class="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+            class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-neutral-700"
           >
             Odhlásit se
           </button>

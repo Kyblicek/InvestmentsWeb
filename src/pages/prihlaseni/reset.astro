@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const params = Astro.url.searchParams;
+const sent = params.get('sent') === '1';
+const token = params.get('token');
+---
+<Layout title="Obnova hesla | René Rypar" description="Požádat o obnovu přístupového hesla." metaImage="/assets/IMG_6170.jpg">
+  <section class="bg-[#f5f5f5] py-24">
+    <div class="mx-auto flex w-full max-w-md flex-col gap-8 rounded-3xl bg-white p-10 shadow-lg">
+      <header class="space-y-2 text-center">
+        <h1 class="font-serif text-3xl">Obnova hesla</h1>
+        <p class="text-sm text-neutral-600">
+          Zadejte e-mail správce. Pokud účet existuje, obratem obdrží instrukce k nastavení nového hesla.
+        </p>
+      </header>
+
+      {sent && (
+        <div class="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          Pokud účet existuje, odeslali jsme odkaz k obnově hesla. Zkontrolujte e-mailovou schránku.
+        </div>
+      )}
+
+      <form method="post" action="/api/auth/request-reset" class="space-y-6">
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">E-mail</span>
+          <input
+            type="email"
+            name="email"
+            required
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+            placeholder="admin@rrinvestments.eu"
+          />
+        </label>
+
+        <div class="flex items-center justify-between">
+          <a href="/prihlaseni" class="text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:text-neutral-800">
+            Zpět na přihlášení
+          </a>
+          <button
+            type="submit"
+            class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-neutral-700"
+          >
+            Odeslat žádost
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const token = Astro.url.searchParams.get('token');
+const error = !token;
+---
+<Layout title="Nastavení nového hesla | René Rypar" description="Zadejte nové heslo pro přístup do administrace." metaImage="/assets/IMG_6170.jpg">
+  <section class="bg-[#f5f5f5] py-24">
+    <div class="mx-auto flex w-full max-w-md flex-col gap-8 rounded-3xl bg-white p-10 shadow-lg">
+      <header class="space-y-2 text-center">
+        <h1 class="font-serif text-3xl">Nastavit nové heslo</h1>
+        <p class="text-sm text-neutral-600">
+          Zadejte nové heslo, které bude mít alespoň 8 znaků.
+        </p>
+      </header>
+
+      {error ? (
+        <div class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          Odkaz pro obnovu je neplatný nebo mu chybí token. Požádejte o nový reset hesla.
+        </div>
+      ) : (
+        <form method="post" action="/api/auth/reset-password" class="space-y-6">
+          <input type="hidden" name="token" value={token} />
+
+          <label class="block space-y-2">
+            <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Nové heslo</span>
+            <input
+              type="password"
+              name="password"
+              minlength="8"
+              required
+              class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+              placeholder="••••••••"
+            />
+          </label>
+
+          <div class="flex items-center justify-between">
+            <a href="/prihlaseni/reset" class="text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:text-neutral-800">
+              Poslat nový odkaz
+            </a>
+            <button
+              type="submit"
+              class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+            >
+              Uložit heslo
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  </section>
+</Layout>

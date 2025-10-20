@@ -59,35 +59,24 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
         <input type="hidden" name="csrfToken" value={csrfToken} />
 
         <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Název *</span>
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Nadpis *</span>
           <input
             type="text"
             name="title"
             value={post.title}
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
           />
         </label>
 
         <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obsah *</span>
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Text příspěvku *</span>
           <textarea
             name="content"
             rows="10"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
-            set:textContent={post.content}
-          ></textarea>
-        </label>
-
-        <label class="block space-y-2">
-          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obrázek (URL)</span>
-          <input
-            type="url"
-            name="imageUrl"
-            value={post.imageUrl ?? ''}
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-base outline-none focus:border-neutral-400"
-          />
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+          >{post.content}</textarea>
         </label>
 
         <div class="flex items-center gap-4">

@@ -1,23 +1,13 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { handleApi, json } from '../../../../server/api';
-import { getSessionTokenForCsrf, requireAdmin } from '../../../../server/auth';
-import { verifyCsrfToken } from '../../../../server/csrf';
-import { db } from '../../../../server/db';
+import { handleApi, json } from '../../../server/api';
+import { getSessionTokenForCsrf, requireAdmin } from '../../../server/auth';
+import { verifyCsrfToken } from '../../../server/csrf';
+import { db } from '../../../server/db';
 
 const updateSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   content: z.string().min(1, 'Content is required'),
-  imageUrl: z
-    .union([z.string(), z.null(), z.undefined()])
-    .transform((value) => {
-      if (!value) return undefined;
-      const trimmed = value.trim();
-      return trimmed === '' ? undefined : trimmed;
-    })
-    .refine((value) => !value || /^https?:\/\//i.test(value), {
-      message: 'Image URL must be absolute',
-    }),
   csrfToken: z.string().min(1, 'Missing CSRF token'),
 });
 
@@ -41,7 +31,6 @@ const updateWithPayload = async (
     data: {
       title: parsed.title,
       content: parsed.content,
-      imageUrl: parsed.imageUrl,
     },
   });
 
@@ -71,7 +60,6 @@ export const PATCH: APIRoute = handleApi(async (context) => {
     parsed = updateSchema.parse({
       title: formData.get('title'),
       content: formData.get('content'),
-      imageUrl: formData.get('imageUrl'),
       csrfToken: formData.get('csrfToken'),
     });
   }
@@ -92,7 +80,6 @@ export const POST: APIRoute = handleApi(async (context) => {
   const parsed = updateSchema.parse({
     title: formData.get('title'),
     content: formData.get('content'),
-    imageUrl: formData.get('imageUrl'),
     csrfToken: formData.get('csrfToken'),
   });
 

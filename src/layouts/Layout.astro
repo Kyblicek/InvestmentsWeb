@@ -3,14 +3,13 @@ import '../styles/global.css';
 
 const NAV_LINKS = [
   { href: '/', label: 'Domů' },
-  { href: '/newsletter', label: 'Edukační materiály' },
   { href: '/posts', label: 'Posty' },
   { href: '/portal', label: 'Portál' },
   { href: '/partneri', label: 'Partneři' },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href) => href === currentPath;
+const isActive = (href: string) => href === currentPath;
 
 const {
   title: pageTitle = 'René Rypar',
@@ -90,7 +89,7 @@ const openGraphImage = Astro.url ? new URL(metaImage, Astro.url).href : metaImag
 
     <div
       id="menuOverlay"
-      class="fixed inset-0 z-40 hidden flex items-center justify-center bg-black/60 text-white backdrop-blur-sm"
+      class="fixed inset-0 z-40 hidden items-center justify-center bg-black/60 text-white backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
     >
@@ -164,6 +163,7 @@ const openGraphImage = Astro.url ? new URL(metaImage, Astro.url).href : metaImag
       const toggleMenu = (open) => {
         if (!overlay || !button) return;
         overlay.classList.toggle('hidden', !open);
+        overlay.classList.toggle('flex', open);
         document.body.classList.toggle('overflow-hidden', open);
         button.setAttribute('aria-expanded', String(open));
       };
