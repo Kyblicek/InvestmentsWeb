@@ -31,11 +31,6 @@ if (props.description) {
   fallbackSeo.description = props.description;
 }
 
-if (props.metaImage) {
-  const base = Astro.site ?? new URL('https://rrinvestments.eu');
-  fallbackSeo.image = new URL(props.metaImage.replace(/^\//, ''), base).toString();
-}
-
 if (typeof props.noIndex === 'boolean') {
   fallbackSeo.noIndex = props.noIndex;
 }
