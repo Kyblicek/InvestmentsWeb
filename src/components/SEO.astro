@@ -16,6 +16,7 @@ const orgJsonLd = {
   '@type': 'Organization',
   name: 'RRInvestments',
   url: siteUrl,
+  logo: new URL('/logo.png', siteUrl).toString(),
 };
 
 const websiteJsonLd = {
@@ -62,12 +63,14 @@ const breadcrumbJsonLd = breadcrumbs && breadcrumbs.length > 0 ? {
 <meta property="og:description" content={description} />
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonical} />
+<meta property="og:image" content={new URL('/og-image.png', siteUrl).toString()} />
 <meta property="og:site_name" content="RRInvestments" />
 
 <!-- Twitter -->
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL('/og-image.png', siteUrl).toString()} />
 
 <!-- JSON-LD -->
 <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>

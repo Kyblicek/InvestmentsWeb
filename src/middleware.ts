@@ -6,6 +6,10 @@ import { releaseDueScheduledPosts } from './server/posts';
 let lastScheduleCheck = 0;
 
 export const onRequest: MiddlewareHandler = async (context, next) => {
+  if (context.request.headers.get('x-astro-prerender') === 'true') {
+    return next();
+  }
+
   const user = await getUserFromRequest(context.request);
   context.locals.user = user;
 
