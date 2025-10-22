@@ -1,10 +1,21 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import PageShell from '../../components/PageShell.astro';
 
 const token = Astro.url.searchParams.get('token');
 const error = !token;
+
+const seo = {
+  title: 'Nastavení nového hesla | RRInvestments',
+  description: 'Zadejte nové heslo pro přístup do administrace RRInvestments.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Přihlášení', url: '/prihlaseni' },
+    { name: 'Nové heslo', url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout title="Nastavení nového hesla | René Rypar" description="Zadejte nové heslo pro přístup do administrace." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto flex w-full max-w-md flex-col gap-8 rounded-3xl bg-white p-10 shadow-lg">
       <header class="space-y-2 text-center">
@@ -49,4 +60,4 @@ const error = !token;
       )}
     </div>
   </section>
-</Layout>
+</PageShell>

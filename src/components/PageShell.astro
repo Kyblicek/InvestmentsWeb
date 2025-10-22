@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import SEO from './SEO.astro';
+import type { SeoProps } from '../types/seo';
 
 const NAV_LINKS = [
   { href: '/', label: 'Domů' },
@@ -11,42 +13,46 @@ const NAV_LINKS = [
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => href === currentPath;
 
-const {
-  title: pageTitle = 'René Rypar',
-  description: pageDescription =
-    'Strategický realitní specialista a investor, který propojuje data, marketing a osobní přístup pro maximální výsledek.',
-  metaImage = '/assets/IMG_6170.jpg',
-} = Astro.props ?? {};
+const props = Astro.props as {
+  seo?: SeoProps;
+  title?: string;
+  description?: string;
+  metaImage?: string;
+  noIndex?: boolean;
+};
 
-const canonicalURL = Astro.url?.href ?? '';
-const openGraphImage = Astro.url ? new URL(metaImage, Astro.url).href : metaImage;
+const fallbackSeo: SeoProps = {};
+
+if (props.title) {
+  fallbackSeo.title = props.title;
+}
+
+if (props.description) {
+  fallbackSeo.description = props.description;
+}
+
+if (props.metaImage) {
+  const base = Astro.site ?? new URL('https://rrinvestments.eu');
+  fallbackSeo.image = new URL(props.metaImage.replace(/^\//, ''), base).toString();
+}
+
+if (typeof props.noIndex === 'boolean') {
+  fallbackSeo.noIndex = props.noIndex;
+}
+
+const seo = {
+  ...fallbackSeo,
+  ...(props.seo ?? {}),
+};
 ---
 <!doctype html>
 <html lang="cs" class="bg-white text-primary">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={pageDescription} />
-    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content={openGraphImage} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content={openGraphImage} />
+    <SEO {...seo} />
     <meta name="theme-color" content="#111111" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body class="min-h-screen bg-white text-primary">
     <div

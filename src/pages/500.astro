@@ -1,11 +1,17 @@
----
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+
+const seo = {
+  title: 'Dočasný problém | RRInvestments',
+  description: 'Omlouváme se, při zpracování požadavku došlo k chybě. Zkuste to znovu nebo nás kontaktujte.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Chyba 500', url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout
-  title="Dočasný problém | René Rypar"
-  description="Omlouváme se, při zpracování požadavku došlo k chybě. Zkuste to prosím znovu nebo nás kontaktujte."
->
+<PageShell {seo}>
   <section class="flex min-h-[70vh] items-center justify-center bg-white px-6 py-20">
     <div class="max-w-2xl space-y-6 text-center">
       <p class="text-sm uppercase tracking-[0.4em] text-neutral-500">Chyba 500</p>
@@ -25,4 +31,4 @@ import SiteFooter from '../components/SiteFooter.astro';
   </section>
 
   <SiteFooter />
-</Layout>
+</PageShell>

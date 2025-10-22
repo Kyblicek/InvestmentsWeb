@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import PageHero from '../components/PageHero.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
@@ -27,12 +27,17 @@ const partners = [
     logo: '/assets/download.png',
   },
 ];
+
+const seo = {
+  title: 'Prověření partneři | RRInvestments',
+  description: 'Spolupracuji s odborníky na realitní servis, financování a marketing, abych klientům doručil špičkový výsledek.',
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Partneři', url: '/partneri' },
+  ],
+};
 ---
-<Layout
-  title="René Rypar | Partneři"
-  description="Prověření partneři a specialisté, se kterými René Rypar zajišťuje komplexní realitní a investiční služby na nejvyšší úrovni."
-  metaImage={heroImage}
->
+<PageShell {seo}>
   <PageHero title="Partneři" image={heroImage} anchorId="#partneri" />
 
   <section id="partneri" class="bg-white py-20">
@@ -40,7 +45,13 @@ const partners = [
       {partners.map((partner) => (
         <div class="flex flex-col gap-6 rounded-3xl bg-muted p-8 shadow-md md:flex-row md:items-center">
           <div class="flex w-40 items-center justify-center rounded-2xl bg-white p-4 shadow">
-            <img src={partner.logo} alt={`Logo ${partner.name}`} class="max-h-20 object-contain" loading="lazy" />
+            <img
+              src={partner.logo}
+              alt={`Logo ${partner.name}`}
+              class="max-h-20 object-contain"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div class="space-y-4 text-sm md:text-base">
             <h3 class="font-serif text-2xl">{partner.name}</h3>
@@ -55,4 +66,4 @@ const partners = [
   </section>
 
   <SiteFooter />
-</Layout>
+</PageShell>

@@ -1,19 +1,22 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+
+export const prerender = true;
 
 const heroVideo = '/assets/DUBAI_PROMO_dist.mp4';
 const heroPoster = '/assets/IMG_6170.jpg';
 const aboutImage = '/assets/IMG_6170.jpg';
 const livingImage = '/assets/IMG_6380.JPG';
 const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
+
+const seo = {
+  title: 'Finanční plánování a investice | RRInvestments',
+  description: 'Strategický realitní specialista René Rypar pomáhá s nákupem, prodejem a investováním do nemovitostí.',
+};
 ---
-<Layout
-  title="René Rypar | Realitní specialista & investor"
-  description="René Rypar propojuje realitní prodeje a investice do nemovitostí s datovou analýzou a osobním přístupem, aby klientům přinesl bezpečné a výnosné transakce."
-  metaImage="/assets/IMG_6170.jpg"
->
-  <section class="relative flex min-h-[90vh] flex-col justify-end overflow-hidden">
+<PageShell seo={seo}>
+  <section class="relative flex min-h-[90vh] flex-col items-center justify-end overflow-hidden text-center">
     <video
       class="absolute inset-0 h-full w-full object-cover"
       src={heroVideo}
@@ -24,12 +27,11 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
       loop
       playsinline
     >
-      Váš prohlížeč nepodporuje přehrávání videa. Můžete pokračovat v prohlížení stránky i bez něj.
     </video>
     <div class="absolute inset-0 bg-black/45"></div>
-    <div class="relative z-10 mx-auto w-full max-w-6xl px-6 pb-32 text-left text-white">
+    <div class="relative z-10 mx-auto w-full max-w-6xl px-6 pb-32 text-center text-white">
       <p class="text-sm uppercase tracking-[0.8em]">René Rypar</p>
-      <h1 class="mt-3 font-serif text-4xl sm:text-6xl">Realitní specialista &amp; investor</h1>
+      <h1 class="mt-3 font-serif text-4xl sm:text-6xl">Realitní specialista &#38; investor</h1>
     </div>
     <a
       href="#o-mne"
@@ -41,17 +43,23 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   </section>
 
   <section id="o-mne" class="bg-white py-20">
-    <div class="mx-auto w-full max-w-6xl space-y-12 px-6 text-center">
+    <div class="mx-auto w-full max-w-6xl space-y-12 px-6 text-left">
       <header>
-        <h2 class="font-serif text-4xl sm:text-5xl">O mně</h2>
+        <h2 class="font-serif text-4xl text-black sm:text-5xl text-center">O mně</h2>
       </header>
       <div class="grid gap-12 md:grid-cols-[1.05fr_1fr] md:items-center">
         <div class="overflow-hidden rounded-[32px] shadow-xl">
-          <img src={aboutImage} alt="René Rypar v interiéru" class="h-full w-full object-cover" loading="lazy" />
+          <img
+            src={aboutImage}
+            alt="René Rypar v interiéru"
+            class="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
-        <div class="space-y-6 text-center">
+        <div class="space-y-6 text-left">
           <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">Kdo jsem a co dělám?</h3>
-          <div class="space-y-5 text-lg leading-8 text-neutral-700 text-center">
+          <div class="space-y-5 text-lg leading-8 text-black">
             <p>
               Jmenuji se <strong>René Rypar</strong> a pomáhám klientům strategicky prodávat, nakupovat a pronajímat nemovitosti v rezidenčním, investičním i komerčním segmentu. Každý obchod stavím na kombinaci profesionální přípravy, datové analýzy a marketingového know-how. Díky tomu zajišťuji rychlý, bezpečný a výnosný průběh celé transakce.
             </p>
@@ -62,10 +70,19 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
   </section>
 
   <section class="py-20">
-    <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 md:flex-row md:items-start">
-      <div class="flex-1 space-y-6 text-center">
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 md:flex-row md:items-center">
+      <div class="flex flex-1 items-center justify-center overflow-hidden rounded-[32px] border border-[#d4d4d4] bg-white p-12 shadow-lg">
+        <img
+          src="/assets/minimal_dsgn-removebg-preview.png"
+          alt="Koncept minimalistického designu"
+          class="h-auto w-full max-w-xs object-contain"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="flex-1 space-y-6 text-left">
         <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">PROČ SPOLUPRACOVAT?</h3>
-        <div class="space-y-5 text-lg leading-8 text-neutral-700">
+        <div class="space-y-5 text-lg leading-8 text-black">
           <p>
             Zajišťuji <strong>kompletní servis</strong> od nastavení cenové a marketingové strategie, přes právní
             služby a financování, až po technickou inspekci a bezpečné uzavření obchodu. <strong>Spolupracuji výhradně s
@@ -73,14 +90,6 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
             zátěže pro klienta.
           </p>
         </div>
-      </div>
-      <div class="flex flex-1 items-center justify-center overflow-hidden rounded-[32px] border border-[#d4d4d4] bg-white p-12 shadow-lg">
-        <img
-          src="/assets/minimal_dsgn-removebg-preview.png"
-          alt="Koncept minimalistického designu"
-          class="h-auto w-full max-w-xs object-contain"
-          loading="lazy"
-        />
       </div>
     </div>
   </section>
@@ -110,9 +119,18 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
 
   <section class="py-20">
     <div class="mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-[1fr_1fr] md:items-center">
-      <div class="space-y-6 text-center">
+      <div class="overflow-hidden rounded-[32px] shadow-xl">
+        <img
+          src={livingImage}
+          alt="Interiér bytu"
+          class="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="space-y-6 text-left">
         <h3 class="text-2xl font-semibold uppercase tracking-[0.3em] text-neutral-600">MÁTE ZÁJEM?</h3>
-        <div class="space-y-5 text-lg leading-8 text-neutral-700">
+        <div class="space-y-5 text-lg leading-8 text-black">
           <p>
             Znalosti sdílím nejen na osobních schůzkách, ale i prostřednictvím sociálních sítí a v sekci
             <a href="/posts" class="font-semibold underline underline-offset-4">Posty</a> na mém webu.
@@ -122,9 +140,6 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
             probereme, jak efektivně vést transakce a <strong>budovat váš majetek</strong>.
           </p>
         </div>
-      </div>
-      <div class="overflow-hidden rounded-[32px] shadow-xl">
-        <img src={livingImage} alt="Interiér bytu" class="h-full w-full object-cover" loading="lazy" />
       </div>
     </div>
   </section>
@@ -175,7 +190,7 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
           ></textarea>
         </label>
         <input type="hidden" name="subject" value="Kontakt z webu René Rypar" />
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 flex justify-center">
           <button
             type="submit"
             class="rounded-full bg-black px-12 py-3 text-sm uppercase tracking-[0.3em] text-white shadow-md transition hover:bg-black/80"
@@ -186,6 +201,4 @@ const formspreeEndpoint = import.meta.env.PUBLIC_FORMSPREE_CONTACT_ENDPOINT;
       </form>
     </div>
   </section>
-
-  <SiteFooter />
-</Layout>
+</PageShell>

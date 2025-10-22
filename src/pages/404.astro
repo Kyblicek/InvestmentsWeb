@@ -1,13 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 export const prerender = true;
+
+const seo = {
+  title: 'Stránka nenalezena | RRInvestments',
+  description: 'Požadovaná stránka neexistuje nebo byla přesunuta. Vraťte se na úvod RRInvestments.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Chyba 404', url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout
-  title="Stránka nenalezena | René Rypar"
-  description="Omlouváme se, požadovaná stránka neexistuje nebo byla přesunuta. Vraťte se na úvod nebo pokračujte na další sekce."
->
+<PageShell {seo}>
   <section class="flex min-h-[70vh] items-center justify-center bg-white px-6 py-20">
     <div class="max-w-2xl text-center space-y-6">
       <p class="text-sm uppercase tracking-[0.4em] text-neutral-500">Chyba 404</p>
@@ -27,4 +34,4 @@ export const prerender = true;
   </section>
 
   <SiteFooter />
-</Layout>
+</PageShell>

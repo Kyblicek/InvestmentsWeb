@@ -1,5 +1,5 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import PageShell from '../../../components/PageShell.astro';
 
 const user = Astro.locals.user;
 if (!user) {
@@ -10,8 +10,20 @@ const csrfToken = Astro.locals.csrfToken;
 if (!csrfToken) {
   throw new Error('Missing CSRF token');
 }
+
+const seo = {
+  title: 'Nový post | RRInvestments',
+  description: 'Vytvořte nový příspěvek pro blog a naplánujte jeho publikaci.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Administrace', url: '/admin' },
+    { name: 'Správa postů', url: '/admin/posts' },
+    { name: 'Nový post', url: '/admin/posts/new' },
+  ],
+};
 ---
-<Layout title="Nový post" description="Vytvořit nový příspěvek." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto w-full max-w-4xl rounded-3xl bg-white p-10 shadow-lg">
       <header class="mb-8 space-y-2">
@@ -28,8 +40,7 @@ if (!csrfToken) {
             type="text"
             name="title"
             required
-            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
-            style="background-color: #ffffff;"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
             placeholder="Krátký nadpis"
             autocomplete="off"
             autofocus
@@ -42,29 +53,38 @@ if (!csrfToken) {
             name="content"
             rows="10"
             required
-            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
-            style="background-color: #ffffff;"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
             placeholder="Hlavní text (150–250 slov)"
           ></textarea>
+        </label>
+
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Naplánovat publikaci</span>
+          <input
+            type="datetime-local"
+            name="scheduledFor"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
+          />
+          <p class="text-xs text-neutral-500">Když pole necháte prázdné, post zůstane jako draft do ruční publikace.</p>
         </label>
 
         <div class="flex flex-wrap items-center gap-4">
           <button
             type="submit"
-            class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+            class="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:border-neutral-500"
           >
             Uložit jako draft
           </button>
           <button
             type="button"
             id="publish-post"
-            class="rounded-full bg-emerald-600 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-emerald-500"
+            class="rounded-full bg-emerald-500 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-emerald-400"
           >
             Uložit &amp; publikovat
           </button>
           <a
             href="/admin/posts"
-            class="rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+            class="rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:border-neutral-500"
           >
             Zpět
           </a>
@@ -72,21 +92,27 @@ if (!csrfToken) {
       </form>
     </div>
   </section>
-</Layout>
+</PageShell>
 
 <script>
   const publishButtonEl = document.getElementById('publish-post');
   const formEl = document.getElementById('create-post-form');
+  const scheduleInput = document.querySelector('input[name="scheduledFor"]');
 
   if (publishButtonEl instanceof HTMLButtonElement && formEl instanceof HTMLFormElement) {
     const publishButton = publishButtonEl;
     const form = formEl;
+    const scheduleField = scheduleInput instanceof HTMLInputElement ? scheduleInput : null;
 
     publishButton.addEventListener('click', async () => {
       const formData = new FormData(form);
 
+      const scheduledValue = scheduleField?.value?.trim();
+      const scheduleDate = scheduledValue ? new Date(scheduledValue) : null;
+      const scheduleInFuture = scheduleDate && scheduleDate.getTime() > Date.now();
+
       publishButton.disabled = true;
-      publishButton.textContent = 'Publikuji…';
+      publishButton.textContent = scheduleInFuture ? 'Plánuji…' : 'Publikuji…';
 
       try {
         const createResponse = await fetch('/api/posts', {
@@ -104,6 +130,11 @@ if (!csrfToken) {
         const { postId } = await createResponse.json();
         if (!postId) {
           throw new Error('Chybí ID nového příspěvku.');
+        }
+
+        if (scheduleInFuture) {
+          window.location.href = '/admin/posts';
+          return;
         }
 
         const publishFormData = new FormData();

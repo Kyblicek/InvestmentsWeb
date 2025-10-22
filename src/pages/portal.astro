@@ -1,15 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import PageHero from '../components/PageHero.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const heroImage = '/assets/Copy of 3-23f88748.jpg';
+
+const seo = {
+  title: 'Klientský portál | RRInvestments',
+  description:
+    'Přihlaste se do privátního portálu a sledujte detailní informace o transakcích, dokumentech a výkonnosti portfolia.',
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Portál', url: '/portal' },
+  ],
+};
 ---
-<Layout
-  title="René Rypar | Portál"
-  description="Přihlaste se do privátního portálu a sledujte detailní informace o transakcích, dokumentech a výkonnosti portfolia v reálném čase."
-  metaImage={heroImage}
->
+<PageShell {seo}>
   <PageHero title="Portál" image={heroImage} anchorId="#portal" />
 
   <section id="portal" class="bg-white py-20">
@@ -19,4 +25,4 @@ const heroImage = '/assets/Copy of 3-23f88748.jpg';
   </section>
 
   <SiteFooter />
-</Layout>
+</PageShell>

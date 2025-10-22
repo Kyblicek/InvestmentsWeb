@@ -1,5 +1,5 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import PageShell from '../../../components/PageShell.astro';
 import { db } from '../../../server/db';
 
 const user = Astro.locals.user;
@@ -26,8 +26,30 @@ if (!post) {
 }
 
 const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') : '—');
+const toLocalInputValue = (date?: Date | null) => (date ? new Date(date).toISOString().slice(0, 16) : '');
+const scheduledValue = toLocalInputValue(post.scheduledFor);
+const statusLabel =
+  post.status === 'PUBLISHED'
+    ? 'Publikováno'
+    : post.status === 'SCHEDULED'
+      ? 'Naplánováno'
+      : post.status === 'DELETED'
+        ? 'Smazáno'
+        : 'Draft';
+
+const seo = {
+  title: `Upravit: ${post.title} | RRInvestments`,
+  description: 'Spravujte obsah příspěvku, plánování publikace a odkazy na LinkedIn.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Administrace', url: '/admin' },
+    { name: 'Správa postů', url: '/admin/posts' },
+    { name: post.title, url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout title={`Upravit: ${post.title}`} description="Editace příspěvku." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto flex w-full max-w-5xl flex-col gap-10 rounded-3xl bg-white p-10 shadow-lg">
       <header class="space-y-2">
@@ -38,13 +60,11 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
       <div class="grid gap-6 md:grid-cols-3">
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Status</p>
-          <p class="mt-4 text-sm font-semibold">
-            {post.status === 'PUBLISHED' ? 'Publikováno' : 'Draft'}
-          </p>
+          <p class="mt-4 text-sm font-semibold text-black">{statusLabel}</p>
         </div>
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Publikováno</p>
-          <p class="mt-4 text-sm font-semibold">{formatDate(post.publishedAt)}</p>
+          <p class="mt-4 text-sm font-semibold text-black">{formatDate(post.publishedAt)}</p>
         </div>
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">LinkedIn</p>
@@ -65,7 +85,7 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
             name="title"
             value={post.title}
             required
-            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
           />
         </label>
 
@@ -75,36 +95,81 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
             name="content"
             rows="10"
             required
-            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-neutral-900 outline-none transition focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
           >{post.content}</textarea>
         </label>
 
-        <div class="flex items-center gap-4">
+        <label class="block space-y-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-neutral-500">Naplánovat publikaci</span>
+          <input
+            type="datetime-local"
+            name="scheduledFor"
+            value={scheduledValue}
+            class="w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-base text-black outline-none transition focus:border-neutral-400"
+          />
+          <p class="text-xs text-neutral-500">
+            Vyplněním nastavíte automatické zveřejnění ve zvolený čas. Nechte prázdné pro ruční publikaci.
+          </p>
+        </label>
+
+        <div class="flex flex-wrap items-center gap-4">
           <button
             type="submit"
-            class="rounded-full bg-neutral-900 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+            class="rounded-full border border-neutral-300 bg-white px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:border-neutral-500"
           >
             Uložit změny
           </button>
           <a
             href="/admin/posts"
-            class="rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-neutral-700 transition hover:border-neutral-500"
+            class="rounded-full border border-neutral-300 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:border-neutral-500"
           >
             Zpět
           </a>
+          <button
+            type="button"
+            id="delete-post"
+            class="rounded-full border border-red-400 bg-white px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:border-red-500"
+          >
+            Smazat post
+          </button>
         </div>
       </form>
-      {post.status === 'DRAFT' && (
+      {post.status !== 'PUBLISHED' && post.status !== 'DELETED' && (
         <form method="post" action={`/api/posts/${post.id}/publish`}>
           <input type="hidden" name="csrfToken" value={csrfToken} />
           <button
             type="submit"
-            class="rounded-full bg-emerald-600 px-6 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:bg-emerald-500"
+            class="rounded-full bg-emerald-500 px-6 py-3 text-sm uppercase tracking-[0.3em] text-black transition hover:bg-emerald-400"
           >
-            Publikovat
+            Publikovat nyní
           </button>
         </form>
       )}
     </div>
   </section>
-</Layout>
+</PageShell>
+
+<script define:vars={{ csrfToken, postId: post.id }}>
+  const deleteButton = document.getElementById('delete-post');
+
+  if (deleteButton instanceof HTMLButtonElement) {
+    deleteButton.addEventListener('click', async () => {
+      if (!confirm('Opravdu chcete příspěvek smazat?')) return;
+
+      const formData = new FormData();
+      formData.set('csrfToken', csrfToken); // <- bezpečně předané ze serveru
+
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        alert('Smazání příspěvku selhalo.');
+        return;
+      }
+
+      window.location.href = '/admin/posts';
+    });
+  }
+</script>

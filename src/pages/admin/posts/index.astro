@@ -1,5 +1,5 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import PageShell from '../../../components/PageShell.astro';
 import { db } from '../../../server/db';
 
 const user = Astro.locals.user;
@@ -19,10 +19,27 @@ const posts = await db.post.findMany({
 });
 
 const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') : '—');
+const statusLabel = (status: string) => {
+  if (status === 'PUBLISHED') return 'Publikováno';
+  if (status === 'SCHEDULED') return 'Naplánováno';
+  if (status === 'DELETED') return 'Smazáno';
+  return 'Draft';
+};
+
+const seo = {
+  title: 'Správa postů | RRInvestments',
+  description: 'Interní přehled příspěvků pro plánování, publikaci a archivaci.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Administrace', url: '/admin' },
+    { name: 'Správa postů', url: '/admin/posts' },
+  ],
+};
 ---
-<Layout title="Správa postů" description="Administrace blogových příspěvků." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#F5F5F5] py-24">
-    <div class="mx-auto flex w-full max-w-6xl flex-col gap-10 rounded-3xl bg-white p-10 shadow-lg">
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-12 rounded-3xl bg-white p-10 shadow-lg">
       <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Obsah</p>
@@ -57,36 +74,46 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
           <tbody class="divide-y divide-neutral-100">
             {posts.map((post) => (
               <tr>
-                <td class="px-6 py-4 text-sm font-medium text-neutral-900">{post.title}</td>
+                <td class="px-6 py-4 text-sm font-medium text-black">{post.title}</td>
                 <td class="px-6 py-4">
                   <span
                     class:list={[
-                      'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]',
+                      'inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-black',
                       post.status === 'PUBLISHED'
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-amber-100 text-amber-700',
+                        ? 'bg-emerald-100'
+                        : post.status === 'SCHEDULED'
+                          ? 'bg-sky-100'
+                          : post.status === 'DELETED'
+                            ? 'bg-neutral-300'
+                            : 'bg-amber-100',
                     ]}
                   >
-                    {post.status === 'PUBLISHED' ? 'Publikováno' : 'Draft'}
+                    {statusLabel(post.status)}
                   </span>
                 </td>
-                <td class="px-6 py-4 text-sm text-neutral-600">{formatDate(post.publishedAt)}</td>
+                <td class="px-6 py-4 text-sm text-black">
+                  {post.status === 'SCHEDULED'
+                    ? formatDate(post.scheduledFor)
+                    : post.status === 'PUBLISHED'
+                      ? formatDate(post.publishedAt)
+                      : '—'}
+                </td>
                 <td class="px-6 py-4 text-sm">
                   <div class="flex flex-wrap justify-center gap-3 sm:justify-start">
                     <a
-                      class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+                      class="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-4 py-2 text-xs uppercase tracking-[0.3em] text-black transition hover:border-neutral-500"
                       href={`/admin/posts/${post.id}`}
                     >
                       Upravit
                     </a>
-                    {post.status === 'DRAFT' && (
+                    {post.status !== 'PUBLISHED' && post.status !== 'DELETED' && (
                       <form method="post" action={`/api/posts/${post.id}/publish`} class="inline">
                         <input type="hidden" name="csrfToken" value={csrfToken} />
                         <button
                           type="submit"
-                          class="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:bg-emerald-500"
+                          class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-xs uppercase tracking-[0.3em] text-black transition hover:bg-emerald-400"
                         >
-                          Publikovat
+                          Publikovat nyní
                         </button>
                       </form>
                     )}
@@ -100,7 +127,7 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
                   Zatím žádné příspěvky.
                   <div class="mt-4">
                     <a
-                      class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-2 text-xs uppercase tracking-[0.3em] text-white transition hover:bg-neutral-700"
+                      class="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-2 text-xs uppercase tracking-[0.3em] text-black transition hover:bg-neutral-700"
                       href="/admin/posts/new"
                     >
                       Vytvořit první
@@ -114,4 +141,4 @@ const formatDate = (date?: Date | null) => (date ? date.toLocaleString('cs-CZ') 
       </div>
     </div>
   </section>
-</Layout>
+</PageShell>

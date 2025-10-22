@@ -1,5 +1,5 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import PageShell from '../../components/PageShell.astro';
 import { db } from '../../server/db';
 
 const user = Astro.locals.user;
@@ -7,25 +7,36 @@ if (!user) {
   return Astro.redirect('/prihlaseni');
 }
 
-const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
+const [totalPosts, publishedPosts, draftPosts, scheduledPosts] = await Promise.all([
   db.post.count(),
   db.post.count({ where: { status: 'PUBLISHED' } }),
   db.post.count({ where: { status: 'DRAFT' } }),
+  db.post.count({ where: { status: 'SCHEDULED' } }),
 ]);
+
+const seo = {
+  title: 'Administrace | RRInvestments',
+  description: 'Interní nástroje pro správu obsahu a publikování investičních postů.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Administrace', url: '/admin' },
+  ],
+};
 ---
-<Layout title="René Rypar | Admin" description="Administrace obsahu webu." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto flex w-full max-w-5xl flex-col gap-12 rounded-3xl bg-white p-12 shadow-lg">
-      <header class="flex flex-col gap-2 text-left">
+      <header class="flex flex-col gap-2 text-center">
         <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Vítejte zpět</p>
-        <h1 class="font-serif text-4xl">Administrace</h1>
+        <h1 class="font-serif text-4xl text-black">Administrace</h1>
         <p class="text-neutral-600">Spravujte obsah webu a publikujte nové příspěvky.</p>
       </header>
 
-      <div class="grid gap-6 md:grid-cols-3">
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Celkem postů</p>
-          <p class="mt-4 text-3xl font-semibold">{totalPosts}</p>
+          <p class="mt-4 text-3xl font-semibold text-black">{totalPosts}</p>
         </div>
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Publikované</p>
@@ -34,6 +45,10 @@ const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
         <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
           <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Drafty</p>
           <p class="mt-4 text-3xl font-semibold text-amber-500">{draftPosts}</p>
+        </div>
+        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-500">Naplánované</p>
+          <p class="mt-4 text-3xl font-semibold text-sky-500">{scheduledPosts}</p>
         </div>
       </div>
 
@@ -61,4 +76,4 @@ const [totalPosts, publishedPosts, draftPosts] = await Promise.all([
       </div>
     </div>
   </section>
-</Layout>
+</PageShell>

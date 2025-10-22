@@ -1,5 +1,25 @@
 import { z } from 'zod';
 
+const emailValidator = z.string().email();
+
+const emailLike = z
+  .string()
+  .min(1)
+  .refine((value) => {
+    const trimmed = value.trim();
+    if (trimmed.includes('<') && trimmed.includes('>')) {
+      const match = trimmed.match(/<([^>]+)>/);
+      const address = match?.[1]?.trim();
+      if (!address) {
+        return false;
+      }
+      return emailValidator.safeParse(address).success;
+    }
+    return emailValidator.safeParse(trimmed).success;
+  }, {
+    message: 'Value must be a valid email like user@example.com or "Name <user@example.com>"',
+  });
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
@@ -16,7 +36,7 @@ const envSchema = z.object({
     }),
   SMTP_USER: z.string().optional(),
   SMTP_PASSWORD: z.string().optional(),
-  EMAIL_FROM: z.string().email().optional(),
+  EMAIL_FROM: emailLike.optional(),
   SMTP_TEST_RECIPIENT: z.string().email().optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 });

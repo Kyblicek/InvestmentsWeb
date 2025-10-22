@@ -1,14 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
 const backgroundImage = '/assets/Copy of 3-23f88748.jpg';
+
+const seo = {
+  title: 'Registrace | RRInvestments',
+  description: 'Založte si účet a získejte přístup k privátním materiálům, portálu a individuální spolupráci.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Registrace', url: '/registrace' },
+  ],
+};
 ---
-<Layout
-  title="René Rypar | Registrace"
-  description="Založte si účet a získejte přístup k privátním materiálům, portálu a individuální spolupráci s Reném Ryparem."
-  metaImage={backgroundImage}
->
+<PageShell {seo}>
   <section class="bg-white">
     <div class="mx-auto grid min-h-[80vh] w-full max-w-6xl gap-0 overflow-hidden rounded-3xl px-6 py-20 lg:grid-cols-[1fr_1fr]">
       <div class="relative hidden h-full overflow-hidden rounded-3xl lg:block">
@@ -17,6 +23,7 @@ const backgroundImage = '/assets/Copy of 3-23f88748.jpg';
           alt="Designový interiér"
           class="h-full w-full object-cover"
           loading="lazy"
+          decoding="async"
         />
       </div>
       <div class="flex flex-col justify-center gap-8 bg-white px-6 py-10 lg:px-12">
@@ -46,4 +53,4 @@ const backgroundImage = '/assets/Copy of 3-23f88748.jpg';
   </section>
 
   <SiteFooter />
-</Layout>
+</PageShell>

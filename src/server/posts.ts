@@ -40,6 +40,10 @@ export const publishPost = async (postId: string) => {
     throw new Error('Post not found');
   }
 
+  if (existing.status === PostStatus.DELETED) {
+    throw new Error('Cannot publish deleted post');
+  }
+
   if (existing.status === PostStatus.PUBLISHED && existing.publishedAt) {
     return existing;
   }
@@ -49,9 +53,42 @@ export const publishPost = async (postId: string) => {
     data: {
       status: PostStatus.PUBLISHED,
       publishedAt: new Date(),
+      scheduledFor: null,
     },
   });
 
   await triggerMakeWebhook(post);
   return post;
+};
+
+export const releaseDueScheduledPosts = async () => {
+  const now = new Date();
+  const duePosts = await db.post.findMany({
+    where: {
+      status: PostStatus.SCHEDULED,
+      scheduledFor: {
+        lte: now,
+      },
+    },
+  });
+
+  if (duePosts.length === 0) {
+    return 0;
+  }
+
+  for (const post of duePosts) {
+    const published = await db.post.update({
+      where: { id: post.id },
+      data: {
+        status: PostStatus.PUBLISHED,
+        publishedAt: now,
+        scheduledFor: null,
+      },
+    });
+
+    await triggerMakeWebhook(published);
+  }
+
+  logger.info('Released scheduled posts', { count: duePosts.length });
+  return duePosts.length;
 };

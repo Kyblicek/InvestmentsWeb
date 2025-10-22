@@ -1,11 +1,22 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import PageShell from '../../components/PageShell.astro';
 
 const params = Astro.url.searchParams;
 const sent = params.get('sent') === '1';
 const token = params.get('token');
+
+const seo = {
+  title: 'Obnova hesla | RRInvestments',
+  description: 'Požádejte o nový odkaz pro nastavení přístupového hesla do administrace RRInvestments.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Přihlášení', url: '/prihlaseni' },
+    { name: 'Obnova hesla', url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout title="Obnova hesla | René Rypar" description="Požádat o obnovu přístupového hesla." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto flex w-full max-w-md flex-col gap-8 rounded-3xl bg-white p-10 shadow-lg">
       <header class="space-y-2 text-center">
@@ -47,4 +58,4 @@ const token = params.get('token');
       </form>
     </div>
   </section>
-</Layout>
+</PageShell>

@@ -1,0 +1,77 @@
+---
+const {
+  title = 'RRInvestments – Finanční plánování & Investice',
+  description = 'Pomáháme lidem růst díky chytrým investicím a osobnímu finančnímu plánu.',
+  url = Astro.url.toString(),
+  noIndex = false,
+  breadcrumbs = undefined as { name: string; url: string }[] | undefined,
+} = Astro.props ?? {};
+
+const canonical = url;
+const robotsContent = noIndex ? 'noindex, nofollow' : 'index, follow';
+
+const siteUrl = Astro.site?.toString() ?? 'https://rrinvestments.eu';
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'RRInvestments',
+  url: siteUrl,
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'RRInvestments',
+  url: siteUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${new URL('search', siteUrl).toString()}?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const breadcrumbJsonLd = breadcrumbs && breadcrumbs.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbs.map((b: { name: string; url: string }, idx: number) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    name: b.name,
+    item: new URL(b.url.replace(/^\//, ''), siteUrl).toString(),
+  })),
+} : null;
+---
+
+<!-- Basic SEO -->
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={robotsContent} />
+<link rel="canonical" href={canonical} />
+
+<!-- Performance -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap"
+/>
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content="RRInvestments" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
+<script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>
+{breadcrumbJsonLd && (
+  <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+)}

@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageShell from '../components/PageShell.astro';
 
 const user = Astro.locals.user;
 if (user?.role === 'ADMIN') {
@@ -15,8 +15,18 @@ const errorMessage =
     : errorParam === 'rate-limit'
       ? 'Příliš mnoho pokusů. Zkuste to později.'
       : null;
+
+const seo = {
+  title: 'Přihlášení | RRInvestments',
+  description: 'Přístup do administrace RRInvestments pro správu obsahu a publikaci článků.',
+  noIndex: true,
+  breadcrumbs: [
+    { name: 'Domů', url: '/' },
+    { name: 'Přihlášení', url: Astro.url.pathname },
+  ],
+};
 ---
-<Layout title="René Rypar | Přihlášení" description="Přihlášení do administrace webu." metaImage="/assets/IMG_6170.jpg">
+<PageShell {seo}>
   <section class="bg-[#f5f5f5] py-24">
     <div class="mx-auto flex w-full max-w-md flex-col gap-10 rounded-3xl bg-white p-10 shadow-lg">
       <header class="space-y-2 text-center">
@@ -43,7 +53,7 @@ const errorMessage =
             type="email"
             name="email"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-white outline-none focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-black outline-none focus:border-neutral-400"
             placeholder="admin@rrinvestments.eu"
           />
         </label>
@@ -54,7 +64,7 @@ const errorMessage =
             type="password"
             name="password"
             required
-            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-white outline-none focus:border-neutral-400"
+            class="w-full rounded-lg border border-neutral-200 px-4 py-3 text-black outline-none focus:border-neutral-400"
             placeholder="••••••••"
           />
         </label>
@@ -77,4 +87,4 @@ const errorMessage =
       </p>
     </div>
   </section>
-</Layout>
+</PageShell>
