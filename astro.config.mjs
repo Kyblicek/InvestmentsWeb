@@ -9,7 +9,7 @@ export default defineConfig({
   site: 'https://rrinvestments.eu',
   output: 'server',
   adapter: node({
-    mode: 'standalone',
+    mode: 'middleware',
   }),
   server: {
     host: true, // důležité pro Railway
