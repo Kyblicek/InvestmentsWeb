@@ -13,10 +13,12 @@ app.use("/assets", express.static(path.join(__dirname, "dist/client/assets")));
 app.use(express.static(path.join(__dirname, "dist/client")));
 
 // 🔥 vše ostatní předej Astreu
-app.all('/*', astroHandler);
+app.use((req, res, next) => {
+  astroHandler(req, res, next);
+});
 
 // ✅ start
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅  Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
