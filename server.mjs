@@ -1,37 +1,22 @@
+// server.mjs
 import express from "express";
-import { handler as astroHandler } from "./dist/server/entry.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
+import { handler as ssrHandler } from "./dist/server/entry.mjs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-const clientPath = path.join(__dirname, "dist", "client");
-console.log("🧩 Serving static files from:", clientPath);
+// 🔹 Log cesty (jen pro debug, můžeš smazat)
+console.log("📁 Serving static files from:", path.join(__dirname, "dist/client"));
 
-// 🧱 Static routes
-app.use("/_astro", express.static(path.join(clientPath, "_astro"), { maxAge: "1y" }));
-app.use("/assets", express.static(path.join(clientPath, "assets"), { maxAge: "1y" }));
-app.use(express.static(clientPath, { maxAge: "1y" }));
+// 🧠 SSR handler musí být první
+app.use(ssrHandler);
 
-// 🧩 Fallback – pokud Express nenašel soubor, zkusíme ručně zkontrolovat cestu
-app.use((req, res, next) => {
-  const filePath = path.join(clientPath, req.path);
-  if (fs.existsSync(filePath)) {
-    console.log("🪄 Serving fallback file:", filePath);
-    return res.sendFile(filePath);
-  }
-  next();
-});
+// 🧩 Statika — CSS, obrázky, favicon, apod.
+app.use(express.static(path.join(__dirname, "dist/client")));
 
-// ✅ Astro SSR handler
-app.use(astroHandler);
-
-// 🚀 Start
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
