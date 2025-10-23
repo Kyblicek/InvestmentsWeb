@@ -19,8 +19,3 @@ pnpm-debug.log*
 # macOS
 .DS_Store
 
-# media – ignore velká videa
-public/**/*.mp4
-public/**/*.mov
-public/**/*.avi
-public/**/*.mkv
