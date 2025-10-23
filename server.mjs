@@ -12,28 +12,13 @@ const app = express();
 const clientPath = path.join(__dirname, "dist", "client");
 console.log("🧩 Serving static files from:", clientPath);
 
-// 🧱 Static folders
-app.use("/_astro", express.static(path.join(clientPath, "_astro"), { maxAge: "1y" }));
-app.use("/assets", express.static(path.join(clientPath, "assets"), { maxAge: "1y" }));
-app.use("/favicon_io", express.static(path.join(clientPath, "favicon_io"), { maxAge: "1y" }));
+// 🧱 Static files
+app.use("/_astro", express.static(path.resolve(clientPath, "_astro"), { maxAge: "1y" }));
+app.use("/assets", express.static(path.resolve(clientPath, "assets"), { maxAge: "1y" }));
+app.use("/favicon_io", express.static(path.resolve(clientPath, "favicon_io"), { maxAge: "1y" }));
 
-// ✅ Root fallback for CSS a favicon
-app.get(/.*\.css$/, (req, res, next) => {
-  const target = path.join(clientPath, req.path);
-  res.sendFile(target, (err) => {
-    if (err) next();
-  });
-});
-
-app.get("/favicon.ico", (req, res, next) => {
-  const target = path.join(clientPath, "favicon.ico");
-  res.sendFile(target, (err) => {
-    if (err) next();
-  });
-});
-
-// 🧠 💥 Hlavní fix — dovol načítat vše z dist/client
-app.use(express.static(clientPath, { maxAge: "1y" }));
+// ✅ explicitně přidej root fallback
+app.use("/", express.static(clientPath, { maxAge: "1y" }));
 
 // ✅ všechno ostatní → Astro SSR
 app.use(astroHandler);
