@@ -1,9 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+import pkg from '@prisma/client';
 import { env, isProduction } from './env';
+
+const { PrismaClient } = pkg;
+type PrismaClientType = InstanceType<typeof PrismaClient>;
 
 declare global {
   // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var prisma: PrismaClientType | undefined;
 }
 
 const prismaClient =
