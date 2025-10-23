@@ -3,10 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "ASTRO_USE_RUST_COMPILER=true astro dev",
-    "build": "ASTRO_USE_RUST_COMPILER=true astro build",
+    "dev": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "start": "node ./dist/server/entry.mjs",
     "seo:check": "echo \"Robots:@ /robots.txt  |  Sitemap:@ /sitemap.xml  |  SEO component wired\""
   },
   "dependencies": {
