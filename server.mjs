@@ -17,8 +17,8 @@ app.use("/_astro", express.static(path.join(clientPath, "_astro"), { maxAge: "1y
 app.use("/assets", express.static(path.join(clientPath, "assets"), { maxAge: "1y" }));
 app.use("/favicon_io", express.static(path.join(clientPath, "favicon_io"), { maxAge: "1y" }));
 
-// ✅ Root fallback for favicon + top-level CSS (like /index.xxxx.css)
-app.get(["/*.css", "/favicon.ico"], (req, res, next) => {
+// ✅ Root fallback for CSS a favicon – opravený syntax
+app.get(/.*\.css$/, (req, res, next) => {
   const target = path.join(clientPath, req.path);
   console.log("Trying to serve:", target);
   res.sendFile(target, (err) => {
@@ -29,7 +29,14 @@ app.get(["/*.css", "/favicon.ico"], (req, res, next) => {
   });
 });
 
-// ✅ Pass everything else to Astro SSR
+app.get("/favicon.ico", (req, res, next) => {
+  const target = path.join(clientPath, "favicon.ico");
+  res.sendFile(target, (err) => {
+    if (err) next();
+  });
+});
+
+// ✅ všechno ostatní → Astro SSR
 app.use(astroHandler);
 
 // 🚀 Start
