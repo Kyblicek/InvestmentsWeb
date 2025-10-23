@@ -6,22 +6,18 @@ import { handler as ssrHandler } from "./dist/server/entry.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-
 const clientPath = path.resolve(__dirname, "dist/client");
+
 console.log("📁 Serving static files from:", clientPath);
 
-// 🧩 Servíruj všechny public assets
+// 🔹 explicitní statické routy pro všechny možné bundly
+app.use("/_astro", express.static(path.join(clientPath, "_astro")));
 app.use("/assets", express.static(path.join(clientPath, "assets")));
-app.use("/_astro", express.static(path.join(clientPath, "_astro"))); // ✅ důležité pro CSS/JS
-app.use(express.static(clientPath));
+app.use("/favicon_io", express.static(path.join(clientPath, "favicon_io")));
+app.use("/public", express.static(path.join(clientPath)));
+app.use(express.static(clientPath, { index: false }));
 
-// 🧠 Logy requestů (jen pro debug)
-app.use((req, res, next) => {
-  console.log("👉 Request:", req.url);
-  next();
-});
-
-// ⚡ SSR fallback
+// 🔹 fallback SSR
 app.use(ssrHandler);
 
 const PORT = process.env.PORT || 8080;
