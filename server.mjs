@@ -7,20 +7,21 @@ import { handler as ssrHandler } from "./dist/server/entry.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-// ✅ Debug log až TEĎ — po vytvoření app
+const clientPath = path.resolve(__dirname, "dist/client");
+console.log("📁 Serving static files from:", clientPath);
+
+// 🧩 Servíruj všechny public assets
+app.use("/assets", express.static(path.join(clientPath, "assets")));
+app.use("/_astro", express.static(path.join(clientPath, "_astro"))); // ✅ důležité pro CSS/JS
+app.use(express.static(clientPath));
+
+// 🧠 Logy requestů (jen pro debug)
 app.use((req, res, next) => {
   console.log("👉 Request:", req.url);
   next();
 });
 
-const clientPath = path.resolve(__dirname, "dist/client");
-console.log("📁 Serving static files from:", clientPath);
-
-// ✅ Nejprve statika (Astro 4)
-app.use(express.static(clientPath));
-app.use("/assets", express.static(path.join(clientPath, "assets")));
-
-// ✅ Pak SSR handler
+// ⚡ SSR fallback
 app.use(ssrHandler);
 
 const PORT = process.env.PORT || 8080;
