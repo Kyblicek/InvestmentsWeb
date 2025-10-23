@@ -1,10 +1,12 @@
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { PostStatus } from '@prisma/client';
+import pkg from '@prisma/client';
 import { handleApi, json } from '../../../server/api';
 import { getSessionTokenForCsrf, requireAdmin } from '../../../server/auth';
 import { verifyCsrfToken } from '../../../server/csrf';
 import { db } from '../../../server/db';
+
+const { PostStatus } = pkg;
 
 const updateSchema = z.object({
   title: z.string().min(1, 'Title is required'),

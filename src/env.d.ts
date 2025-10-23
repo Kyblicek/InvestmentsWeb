@@ -1,7 +1,9 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 
-import type { User } from '@prisma/client';
+import pkg from '@prisma/client';
+
+const { User } = pkg;
 
 declare global {
   namespace App {

@@ -1,8 +1,10 @@
 import type { Post } from '@prisma/client';
-import { PostStatus } from '@prisma/client';
+import pkg from '@prisma/client';
 import { db } from './db';
 import { env } from './env';
 import { logger } from './logger';
+
+const { PostStatus } = pkg;
 
 const canonicalBase = (env.PUBLIC_SITE_URL ?? 'https://www.rrinvestments.eu').replace(/\/$/, '');
 
