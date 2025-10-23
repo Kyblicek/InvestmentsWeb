@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // ✅ absolutní cesta k Astro build složce
-const clientPath = path.join(__dirname, "dist", "client");
+const clientPath = path.join(__dirname, "web", "dist", "client");
 console.log("🧩 Serving static files from:", clientPath);
 
 // 🧱 Static files
