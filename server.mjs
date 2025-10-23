@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ✅ absolutní cesta k Astro build složce
-const clientPath = path.join(__dirname, "web", "dist", "client");
+const clientPath = path.join(__dirname, "dist", "client");
 
 // 🧩 DEBUG výpisy
 console.log("🧩 __dirname:", __dirname);
