@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "start": "node ./dist/server/entry.mjs",
+    "start": "node ./server.mjs",
     "seo:check": "echo \"Robots:@ /robots.txt  |  Sitemap:@ /sitemap.xml  |  SEO component wired\""
   },
   "dependencies": {
