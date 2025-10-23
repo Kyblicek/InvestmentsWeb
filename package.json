@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "start": "node ./server.mjs",
+    "postinstall": "prisma generate",
     "seo:check": "echo \"Robots:@ /robots.txt  |  Sitemap:@ /sitemap.xml  |  SEO component wired\""
   },
   "dependencies": {
