@@ -4,6 +4,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { handler as ssrHandler } from "./dist/server/entry.mjs";
 
+app.use((req, res, next) => {
+  console.log("👉 Request:", req.url);
+  next();
+});
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
