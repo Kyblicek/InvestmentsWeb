@@ -2,15 +2,21 @@ import express from "express";
 import { handler as astroHandler } from "./dist/server/entry.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
-
 // ✅ absolutní cesta k Astro build složce
 const clientPath = path.join(__dirname, "web", "dist", "client");
+
+// 🧩 DEBUG výpisy
+console.log("🧩 __dirname:", __dirname);
+console.log("🧩 exists dist?", fs.existsSync(path.join(__dirname, "dist")));
+console.log("🧩 exists web/dist?", fs.existsSync(path.join(__dirname, "web", "dist")));
 console.log("🧩 Serving static files from:", clientPath);
+
+const app = express();
 
 // 🧱 Static files
 app.use("/_astro", express.static(path.resolve(clientPath, "_astro"), { maxAge: "1y" }));
