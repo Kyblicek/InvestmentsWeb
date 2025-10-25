@@ -7,8 +7,10 @@ type UrlItem = {
   priority?: number;
 };
 
+const SITE_URL = 'https://rrinvestments.eu';
+
 async function getStaticRoutes(): Promise<UrlItem[]> {
-  const now = new Date().toISOString().slice(0, 10);
+  const now = new Date().toISOString().split('T')[0];
   return [
     { loc: '/', lastmod: now, changefreq: 'monthly', priority: 1.0 },
     { loc: '/posts', lastmod: now, changefreq: 'weekly', priority: 0.8 },
@@ -29,40 +31,44 @@ async function getDynamicPostRoutes(): Promise<UrlItem[]> {
 
     return posts.map((post) => ({
       loc: `/posts/${post.id}`,
-      lastmod: post.updatedAt.toISOString().slice(0, 10),
+      lastmod: post.updatedAt.toISOString().split('T')[0],
       changefreq: 'weekly',
       priority: 0.6,
     }));
   } catch (error) {
-    console.warn('Failed to load dynamic sitemap routes', error);
+    console.warn('⚠️ Dynamic sitemap generation failed:', error);
     return [];
   }
 }
 
-export const GET: APIRoute = async ({ site }) => {
-  const base = (site ?? new URL('https://rrinvestments.eu')).toString().replace(/\/+$/, '') + '/';
-  const urls: UrlItem[] = [
+export const GET: APIRoute = async () => {
+  const urls = [
     ...(await getStaticRoutes()),
     ...(await getDynamicPostRoutes()),
   ];
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-    .map((u) => {
-      const loc = new URL(u.loc.replace(/^\//, ''), base).toString();
-      return [
-        '  <url>',
-        `    <loc>${loc}</loc>`,
-        u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>` : '',
-        u.changefreq ? `    <changefreq>${u.changefreq}</changefreq>` : '',
-        typeof u.priority === 'number' ? `    <priority>${u.priority.toFixed(1)}</priority>` : '',
-        '  </url>',
-      ]
-        .filter(Boolean)
-        .join('\n');
-    })
-    .join('\n')}\n</urlset>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (u) => `
+  <url>
+    <loc>${SITE_URL}${u.loc}</loc>
+    ${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}
+    ${u.changefreq ? `<changefreq>${u.changefreq}</changefreq>` : ''}
+    ${typeof u.priority === 'number' ? `<priority>${u.priority.toFixed(1)}</priority>` : ''}
+  </url>`
+  )
+  .join('\n')}
+</urlset>`.trim();
 
   return new Response(xml, {
-    headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+    status: 200,
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
   });
 };
